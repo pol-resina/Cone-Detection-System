@@ -1,0 +1,12 @@
+# This file contains the configuration for the node
+
+# General parameters
+common:
+  topics:
+    input:
+      points: "/velodyne_points"
+    output:
+      ground: "/ftfcd/debug/ground"
+
+manager:
+  publish_debug: true

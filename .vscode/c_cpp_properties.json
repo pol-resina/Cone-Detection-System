@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/pol/bcn54/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/pol/bcn54/catkin_ws/src/as_visualization/include/**",
+        "/home/pol/bcn54/catkin_ws/src/danalysis/include/**",
+        "/home/pol/bcn54/catkin_ws/src/ec-thor/include/**",
+        "/home/pol/bcn54/catkin_ws/src/ector_ransac/include/**",
+        "/home/pol/bcn54/catkin_ws/src/ftfcd/include/**",
+        "/home/pol/bcn54/catkin_ws/src/holamundo/include/**",
+        "/home/pol/bcn54/catkin_ws/src/limo-velo/include/**",
+        "/home/pol/bcn54/catkin_ws/src/sqlito/include/**",
+        "/home/pol/bcn54/catkin_ws/src/tracker/include/**",
+        "/home/pol/bcn54/catkin_ws/src/urinay/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
