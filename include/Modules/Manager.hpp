@@ -1,42 +1,36 @@
 #ifndef MANAGER_HPP
 #define MANAGER_HPP
 
-#include <as_msgs/ObservationArray.h>
-#include <geometry_msgs/PoseArray.h>
-#include <nav_msgs/Odometry.h>
-#include <pcl/filters/crop_box.h>
-#include <pcl/octree/octree_search.h>
-#include <pcl_conversions/pcl_conversions.h>
-#include <ros/ros.h>
+// #include <as_msgs/ObservationArray.h>
+// #include <geometry_msgs/PoseArray.h>
+// #include <nav_msgs/Odometry.h>
+// #include <pcl/filters/crop_box.h>
+// #include <pcl/octree/octree_search.h>
+// #include <pcl_conversions/pcl_conversions.h>
+// #include <ros/ros.h>
 
-#include "Objects/Params.hpp"
+// #include "Objects/Params.hpp"
+
+#include "sensor_msgs/PointCloud2.h"
+#include "Modules/Config.hpp"
+#include "Modules/Ransac.hpp"
 
 class Manager {
   private:
-    Manager();
-    ~Manager();
+    ros::Publisher pubGround;
+    
+    Ransac ransac;
 
-    ros::Publisher pubGround_;
-
-    Params::Manager params_;
+    bool publish_debug_;
 
     void publishGround(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &ground) const;
 
   public:
-    static Manager& getInstance() {
-      static Manager instance;
-      return instance;
-    }
+    // Constructor
+    Manager(ros::NodeHandle &nh);
 
-    Manager(Manager const&) = delete;
-    void operator=(Manager const&) = delete;
-
-    void init(const Params &params,
-              const ros::Publisher &pubGround);
-
+    // Callbacks
     void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);
-
-    void saveRawpoints(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &cloud) const;
 };
 
 #endif // MANAGER_HPP

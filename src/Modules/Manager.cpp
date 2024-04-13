@@ -1,14 +1,11 @@
 #include "Modules/Manager.hpp"
 
-Manager::Manager() {}
-Manager::~Manager() {}
+extern struct Params Config;
 
-void Manager::init(const Params &params, 
-                   const ros::Publisher &pubGround) {
-    this->params_ = params.manager;
-    this->pubGround_ = pubGround;
+Manager::Manager(ros::NodeHandle &nh): ransac(Config){
+    pubGround = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.ground, 20);
+    this->publish_debug_ = Config.manager.publish_debug;
 }
-
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
     if (cloud_msg == nullptr) return; // NO data
@@ -18,12 +15,7 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::fromROSMsg(*cloud_msg, *cloud);
 
-
-    std::string filepath = "/home/pol/bcn54/catkin_ws/src/ftfcd/pcds/example.pcd";
-    pcl::io::savePCDFileBinary(filepath, *cloud);
-
-
-    if (this->params_.publish_debug) {
+    if (publish_debug_) {
         this->publishGround(cloud);
     }
     
@@ -38,5 +30,5 @@ void Manager::publishGround(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &clo
     pcl::toROSMsg(*cloud, msg);
     msg.header.frame_id = "global";
     msg.header.stamp = ros::Time::now();
-    this->pubGround_.publish(msg);
+    this->pubGround.publish(msg);
 }

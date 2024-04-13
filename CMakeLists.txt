@@ -37,8 +37,7 @@ add_executable(ftfcd
   src/main.cpp
 
   src/Modules/Manager.cpp
-
-  src/Objects/Params.cpp
+  src/Modules/Ransac.cpp
 )
 
 add_dependencies(${PROJECT_NAME} as_msgs_generate_messages_cpp)
