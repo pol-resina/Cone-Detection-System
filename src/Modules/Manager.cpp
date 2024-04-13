@@ -18,6 +18,11 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::fromROSMsg(*cloud_msg, *cloud);
 
+
+    std::string filepath = "/home/pol/bcn54/catkin_ws/src/ftfcd/pcds/example.pcd";
+    pcl::io::savePCDFileBinary(filepath, *cloud);
+
+
     if (this->params_.publish_debug) {
         this->publishGround(cloud);
     }
