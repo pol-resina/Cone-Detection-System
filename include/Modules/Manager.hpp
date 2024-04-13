@@ -37,8 +37,6 @@ class Manager {
     void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);
 
     void saveRawpoints(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &cloud) const;
-
-    void run();
 };
 
 #endif // MANAGER_HPP

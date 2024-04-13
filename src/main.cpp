@@ -29,19 +29,7 @@ int main(int argc, char **argv){
 
     // Subscribers
     ros::Subscriber subVelodyne = nh->subscribe(params.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
+    
+    ros::spin();
 
-    std_msgs::Float32 time;
-    while (ros::ok()) {
-        auto beginMain = std::chrono::high_resolution_clock::now();
-
-        // Program execution
-        manager.run();
-                
-        auto endMain = std::chrono::high_resolution_clock::now();
-        time.data = std::chrono::duration_cast<std::chrono::milliseconds>(endMain - beginMain).count();
-        pubTime.publish(time);
-        std::cout << "MAIN LOOP ROSRATE :  " << time.data << "ms" << std::endl;
-
-        ros::spinOnce();
-    }
 }

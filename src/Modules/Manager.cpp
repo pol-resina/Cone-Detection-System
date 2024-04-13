@@ -9,18 +9,11 @@ void Manager::init(const Params &params,
     this->pubGround_ = pubGround;
 }
 
-void Manager::run() {
-    ROS_INFO("Manager::run()");
-
-    pcl::PointCloud<pcl::PointXYZI>::Ptr dummyCloud(new pcl::PointCloud<pcl::PointXYZI>);
-    velodyneCallback(dummyCloud);
-
-
-}
-
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
     if (cloud_msg == nullptr) return; // NO data
+
+    auto start = std::chrono::high_resolution_clock::now();
 
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::fromROSMsg(*cloud_msg, *cloud);
@@ -28,10 +21,10 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     if (this->params_.publish_debug) {
         this->publishGround(cloud);
     }
-}
-
-void Manager::saveRawpoints(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &cloud) const {
-
+    
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "Elapsed time: " << elapsed.count() * 1000 << "ms" << std::endl;
 }
 
 
