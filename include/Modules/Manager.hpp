@@ -23,7 +23,7 @@ class Manager {
 
     bool publish_debug_;
 
-    void publishGround(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &ground) const;
+    void publishGround(sensor_msgs::PointCloud2 msg);
 
   public:
     // Constructor

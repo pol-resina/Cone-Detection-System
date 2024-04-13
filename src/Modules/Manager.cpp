@@ -15,8 +15,11 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::fromROSMsg(*cloud_msg, *cloud);
 
+    sensor_msgs::PointCloud2 msg;
+    ransac.removeGround(cloud, msg);
+
     if (publish_debug_) {
-        this->publishGround(cloud);
+        this->publishGround(msg);
     }
     
     auto end = std::chrono::high_resolution_clock::now();
@@ -25,9 +28,7 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 }
 
 
-void Manager::publishGround(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &cloud) const {
-    sensor_msgs::PointCloud2 msg;
-    pcl::toROSMsg(*cloud, msg);
+void Manager::publishGround(sensor_msgs::PointCloud2 msg){
     msg.header.frame_id = "global";
     msg.header.stamp = ros::Time::now();
     this->pubGround.publish(msg);
