@@ -9,6 +9,7 @@
         "/opt/ros/noetic/lib/python3/dist-packages"
     ],
     "files.associations": {
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "cstdlib": "cpp"
     }
 }
