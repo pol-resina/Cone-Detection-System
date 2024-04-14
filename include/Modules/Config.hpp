@@ -18,6 +18,14 @@ struct Params{
         bool vis_outliers;
     } ransac;
 
+    struct Dbscan {
+        int octreeResolution;
+        int eps;
+        int minPtsAux;
+        int minPts;
+    } dbscan;
+
+
     struct Common {
         struct {
             struct {
@@ -25,6 +33,7 @@ struct Params{
             } input;
             struct {
                 std::string ground;
+                std::string clusters;
             } output;
         } topics;
     } common;

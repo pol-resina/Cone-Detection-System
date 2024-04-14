@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     Manager manager = Manager(nh);
 
     ros::Subscriber subVelodyne = nh.subscribe(Config.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
-    
+
     ros::spin(); 
 
     return 0;
@@ -30,6 +30,7 @@ void import_params(ros::NodeHandle &nh){
     // COMMON
     nh.param<std::string>("/ftfcd/common/topics/input/points", Config.common.topics.input.points, "/velodyne_points");
     nh.param<std::string>("/ftfcd/common/topics/output/ground", Config.common.topics.output.ground, "/ftfcd/ground");
+    nh.param<std::string>("/ftfcd/common/topics/output/clusters", Config.common.topics.output.clusters, "/ftfcd/clusters");
 
     // MANAGER
     nh.param<bool>("/ftfcd/manager/publish_debug", Config.manager.publish_debug, true);
@@ -44,4 +45,10 @@ void import_params(ros::NodeHandle &nh){
     nh.param<int>("ransac/max_iterations", Config.ransac.max_iterations, 401);
     nh.param<double>("ransac/dist_threshold", Config.ransac.dist_threshold, 0.1);
     nh.param<double>("ransac/plane_angle", Config.ransac.plane_angle, 0.3);
+
+    // DBSCAN
+    nh.param<int>("dbscan/octreeResolution", Config.dbscan.octreeResolution, 120);
+    nh.param<int>("dbscan/eps", Config.dbscan.eps, 40);
+    nh.param<int>("dbscan/minPtsAux", Config.dbscan.minPtsAux, 5);
+    nh.param<int>("dbscan/minPts", Config.dbscan.minPts, 5);
 }

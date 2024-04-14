@@ -7,6 +7,13 @@ common:
       points: "/velodyne_points"
     output:
       ground: "/ftfcd/debug/ground"
+      clusters: "/ftfcd/debug/clusters"
 
 manager:
   publish_debug: true
+
+dbscan:
+  octreeResolution: 9
+  eps: 4
+  minPtsAux: 3
+  minPts: 3

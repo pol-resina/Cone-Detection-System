@@ -33,13 +33,10 @@ include_directories(
 add_executable(ftfcd
   include/Modules
 
-  # Code
   src/main.cpp
 
   src/Modules/Manager.cpp
   src/Modules/Ransac.cpp
-
-  src/Objects/Params.cpp
 
   src/Utils/Cluster.cpp
   src/Utils/Dbscan.cpp

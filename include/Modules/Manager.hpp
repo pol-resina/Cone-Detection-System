@@ -9,21 +9,23 @@
 // #include <pcl_conversions/pcl_conversions.h>
 // #include <ros/ros.h>
 
-// #include "Objects/Params.hpp"
-
 #include "sensor_msgs/PointCloud2.h"
 #include "Modules/Config.hpp"
 #include "Modules/Ransac.hpp"
+#include "Utils/Dbscan.hpp"
 
 class Manager {
   private:
     ros::Publisher pubGround;
+    ros::Publisher pubClusters;
     
     Ransac ransac;
 
     bool publish_debug_;
 
-    void publishGround(const pcl::PointCloud<pcl::PointXYZI>::ConstPtr &ground) const;
+    void publishGround(sensor_msgs::PointCloud2 msg);
+
+    void publishClusters(std::vector<dbScanSpace::cluster> clusters);
 
   public:
     // Constructor
