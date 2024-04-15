@@ -3,7 +3,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
-#include <pcl/common/io.h> // for pcl::copyPointCloud
+#include <pcl/common/io.h> 
 #include <random>
 #include <string>
 
