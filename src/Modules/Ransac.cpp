@@ -1,12 +1,13 @@
 #include "Modules/Ransac.hpp"
 #include <ros/ros.h>  //llibreria de ros!
 
-void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_msgs::PointCloud2 &no_ground_msg){
+void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_msgs::PointCloud2 &no_ground_msg,
+                        pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground){
     
     pcl::PointCloud<pcl::PointXYZI>::Ptr preprocCloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::PassThrough<pcl::PointXYZI> pass;
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
+    // pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::SACSegmentation<pcl::PointXYZI> seg;
     
     pass.setInputCloud(cloud);

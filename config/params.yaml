@@ -13,7 +13,7 @@ manager:
   publish_debug: true
 
 dbscan:
-  octreeResolution: 9
-  eps: 4
+  octreeResolution: 10
+  eps: 5
   minPtsAux: 3
   minPts: 3

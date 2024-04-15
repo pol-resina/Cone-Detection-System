@@ -38,7 +38,8 @@ class Ransac {
     }
     //Ransac(){}
     void removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, 
-                      sensor_msgs::PointCloud2 &no_ground_msg);
+                      sensor_msgs::PointCloud2 &no_ground_msg,
+                      pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground);
 
 };
 
