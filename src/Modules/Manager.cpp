@@ -18,7 +18,7 @@ Manager::Manager(ros::NodeHandle &nh): ransac(Config){
 }
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
-    if (cloud_msg == nullptr) return; // NO data
+    if (cloud_msg == nullptr) return;
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -63,9 +63,9 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
       cloudRGB->points[i] = point_rgb;
     }
 
-
+    
     dbscan.init(groupA, cloudRGB, Config.dbscan.octreeResolution, Config.dbscan.eps, Config.dbscan.minPtsAux, Config.dbscan.minPts);
-    dbscan.generateClusters();
+    dbscan.generateClusters_fast();
 
     this->publishClusters(dbscan.getClusters());
 
