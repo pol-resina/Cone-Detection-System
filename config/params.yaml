@@ -17,3 +17,14 @@ dbscan:
   eps: 5
   minPtsAux: 3
   minPts: 3
+
+ransac:
+  ground_segmentation_mode: true              # True: Ransac / False: Linefit
+  publish_ground: true                        # Publish ground
+  publish_obstacle: true                      # Publish obstacle
+  minz: -2                                    # min z value of the point cloud
+  maxz: 2                                     # max z value of the point cloud
+  max_iterations: 600                         # max iterations of the ransac algorithm (https://en.wikipedia.org/wiki/Random_sample_consensus)
+  dist_threshold: 0.1                         # distance threshold of the ransac algorithm   s'ha de quedar a 0.1 sino els cons perden massa punts
+  plane_angle: 0.30                           # max angle of the plane 
+  vis_outliers: false                         # visualize outliers
