@@ -46,20 +46,15 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     {
       pcl::PointXYZI point_i = no_ground->points[i];
 
-      // Create a corresponding RGB point
       pcl::PointXYZRGB point_rgb;
       point_rgb.x = point_i.x;
       point_rgb.y = point_i.y;
       point_rgb.z = point_i.z;
 
-      // Convert intensity to RGB color
-      // For simplicity, let's assume intensity directly maps to grayscale
-      // You can replace this with a more sophisticated mapping if needed
       point_rgb.r = 255;
       point_rgb.g = 255;
       point_rgb.b = 255;
 
-      // Add the RGB point to the RGB point cloud
       cloudRGB->points[i] = point_rgb;
     }
 
@@ -76,24 +71,36 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 
 void Manager::publishClusters(std::vector<dbScanSpace::cluster> clusters){
 
-  pcl::PointCloud<pcl::PointXYZ>::Ptr global_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+  pcl::PointCloud<pcl::PointXYZRGB>::Ptr global_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
+  std::cout << "size: " << clusters.size() << std::endl;
   for (auto &cluster : clusters){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 255);
+
+    int random_number1 = dis(gen);
+    int random_number2 = dis(gen);
+    int random_number3 = dis(gen);
     for (auto &pointCluster : cluster.clusterPoints){
-      pcl::PointXYZ point;
+      pcl::PointXYZRGB point;
       point.x = pointCluster.x;
       point.y = pointCluster.y;
       point.z = pointCluster.z;
+
+      point.r = random_number1;
+      point.b = random_number2;
+      point.g = random_number3;
 
       global_cloud->points.push_back(point);
     }
   }
 
-  sensor_msgs::PointCloud2 output;
-  pcl::toROSMsg(*global_cloud, output);
+  sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
+  pcl::toROSMsg(*global_cloud, *output);
 
-  output.header.frame_id = "global";
-  output.header.stamp = ros::Time::now();
+  output->header.frame_id = "global";
+  output->header.stamp = ros::Time::now();
   this->pubClusters.publish(output);
 }
 

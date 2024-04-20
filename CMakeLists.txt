@@ -37,6 +37,7 @@ add_executable(ftfcd
 
   src/Modules/Manager.cpp
   src/Modules/Ransac.cpp
+  src/Modules/Clustering.cpp
 
   src/Utils/Cluster.cpp
   src/Utils/Dbscan.cpp

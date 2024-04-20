@@ -73,7 +73,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.009999999776482582
+      Size (m): 0.20000000298023224
       Style: Flat Squares
       Topic: /ftfcd/debug/clusters
       Unreliable: false
@@ -108,7 +108,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 16.827350616455078
+      Distance: 33.21420669555664
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -124,9 +124,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5403982400894165
+      Pitch: 0.6203981637954712
       Target Frame: <Fixed Frame>
-      Yaw: 3.1204123497009277
+      Yaw: 2.9004173278808594
     Saved: ~
 Window Geometry:
   Displays:
