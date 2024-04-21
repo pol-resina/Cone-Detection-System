@@ -42,6 +42,13 @@ void import_params(ros::NodeHandle &nh){
     nh.param<bool>("ransac/vis_outliers", Config.ransac.vis_outliers, false);
     nh.param<int>("ransac/minz", Config.ransac.minz, -6);
     nh.param<int>("ransac/maxz", Config.ransac.maxz, 6);
+    nh.param<int>("ransac/max_x", Config.ransac.max_x, 25);
+    nh.param<int>("ransac/max_y", Config.ransac.max_y, 5);
+    nh.param<int>("ransac/min_y", Config.ransac.min_y, -5);
+    nh.param<double>("ransac/x_car_limit_p", Config.ransac.x_car_limit_p, 0.5);
+    nh.param<double>("ransac/x_car_limit_n", Config.ransac.x_car_limit_n, -0.5);
+    nh.param<double>("ransac/y_car_limit_p", Config.ransac.y_car_limit_p, 0.5);
+    nh.param<double>("ransac/y_car_limit_n", Config.ransac.y_car_limit_n, -0.5);
     nh.param<int>("ransac/max_iterations", Config.ransac.max_iterations, 401);
     nh.param<double>("ransac/dist_threshold", Config.ransac.dist_threshold, 0.1);
     nh.param<double>("ransac/plane_angle", Config.ransac.plane_angle, 0.3);
@@ -52,3 +59,5 @@ void import_params(ros::NodeHandle &nh){
     nh.param<int>("dbscan/minPtsAux", Config.dbscan.minPtsAux, 5);
     nh.param<int>("dbscan/minPts", Config.dbscan.minPts, 5);
 }
+
+

@@ -11,6 +11,29 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
     pcl::SACSegmentation<pcl::PointXYZI> seg;
     
     pass.setInputCloud(cloud);
+    pass.setFilterFieldName("x");
+    pass.setFilterLimitsNegative(true);
+    pass.setFilterLimits(this->x_car_limit_n_, this->x_car_limit_p_);
+    pass.filter(*cloud);
+
+    pass.setInputCloud(cloud);
+    pass.setFilterFieldName("y");
+    pass.setFilterLimits(this->y_car_limit_n_, this->y_car_limit_p_);
+    pass.filter(*cloud);
+    
+    
+    pass.setInputCloud(cloud);
+    pass.setFilterFieldName("x");
+    pass.setFilterLimitsNegative(false);
+    pass.setFilterLimits(0, this->max_x_);
+    pass.filter(*cloud);
+
+    pass.setInputCloud(cloud);
+    pass.setFilterFieldName("y");
+    pass.setFilterLimits(this->min_y_, this->max_y_);
+    pass.filter(*cloud);
+
+    pass.setInputCloud(cloud);
     pass.setFilterFieldName("z");
     pass.setFilterLimits(this->minz_, this->maxz_);
     pass.filter(*preprocCloud);
@@ -40,3 +63,4 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
 
     pcl::toROSMsg(*no_ground,no_ground_msg);
 }
+
