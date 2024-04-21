@@ -13,10 +13,10 @@ manager:
   publish_debug: true
 
 dbscan:
-  octreeResolution: 10
-  eps: 5
-  minPtsAux: 3
-  minPts: 3
+  octreeResolution: 100
+  eps: 2
+  minPtsAux: 2
+  minPts: 2
 
 ransac:
   ground_segmentation_mode: true              # True: Ransac / False: Linefit
@@ -24,7 +24,14 @@ ransac:
   publish_obstacle: true                      # Publish obstacle
   minz: -2                                    # min z value of the point cloud
   maxz: 2                                     # max z value of the point cloud
-  max_iterations: 600                         # max iterations of the ransac algorithm (https://en.wikipedia.org/wiki/Random_sample_consensus)
-  dist_threshold: 0.1                         # distance threshold of the ransac algorithm   s'ha de quedar a 0.1 sino els cons perden massa punts
+  max_x: 25                                   # max x value of the point cloud
+  max_y: 5                                    # max y value of the point cloud
+  min_y: -5                                   # min y value of the point cloud
+  x_car_limit_p: 0.5                          # The 4 values of car limit are because
+  x_car_limit_n: -0.5                         # there are parts of the car that are always
+  y_car_limit_p: 0.5                          # reached by the LiDAR laser beams and same position
+  y_car_limit_n: -0.5                         # No need to look for them always
+  max_iterations: 400                         # max iterations of the ransac algorithm (https://en.wikipedia.org/wiki/Random_sample_consensus)
+  dist_threshold: 0.1                        # distance threshold of the ransac algorithm   s'ha de quedar a 0.1 sino els cons perden massa punts
   plane_angle: 0.30                           # max angle of the plane 
   vis_outliers: false                         # visualize outliers

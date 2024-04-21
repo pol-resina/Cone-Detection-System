@@ -12,6 +12,13 @@ struct Params{
         bool publish_obstacle;
         int minz;
         int maxz;
+        int max_x;
+        int max_y;
+        int min_y;
+        double x_car_limit_p;
+        double x_car_limit_n;
+        double y_car_limit_p;
+        double y_car_limit_n;
         int max_iterations;
         double dist_threshold;
         double plane_angle; 
