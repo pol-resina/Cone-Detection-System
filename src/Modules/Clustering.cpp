@@ -1,19 +1,19 @@
 #include "Modules/Clustering.hpp"
 
-
-std::vector<dbScanSpace::cluster> Clustering::clusterize_dbScan(const pcl::PointCloud<pcl::PointXYZI>::Ptr &input_cloud){
-    std::vector<htr::Point3D> groupA;
+std::vector<dbScanSpace::cluster> Clustering::generateClusters(const pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground, bool fast){
+    
     dbScanSpace::dbscan dbscan;
-
+    std::vector<htr::Point3D> groupA;
+    
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloudRGB(new pcl::PointCloud<pcl::PointXYZRGB>);
-    cloudRGB->width = input_cloud->width;
-    cloudRGB->height = input_cloud->height;
-    cloudRGB->is_dense = input_cloud->is_dense;
+    cloudRGB->width = no_ground->width;
+    cloudRGB->height = no_ground->height;
+    cloudRGB->is_dense = no_ground->is_dense;
     cloudRGB->points.resize(cloudRGB->width * cloudRGB->height);
 
-    for (size_t i = 0; i < input_cloud->points.size(); ++i)
+    for (size_t i = 0; i < no_ground->points.size(); ++i)
     {
-      pcl::PointXYZI point_i = input_cloud->points[i];
+      pcl::PointXYZI point_i = no_ground->points[i];
 
       pcl::PointXYZRGB point_rgb;
       point_rgb.x = point_i.x;
@@ -27,8 +27,11 @@ std::vector<dbScanSpace::cluster> Clustering::clusterize_dbScan(const pcl::Point
       cloudRGB->points[i] = point_rgb;
     }
 
-    dbscan.init(groupA, cloudRGB, this->octreeResolution_, this->eps_, this->minPtsAux_, this->minPts_);
-    dbscan.generateClusters_fast();
+
+    dbscan.init(groupA, cloudRGB, octreeResolution_, eps_, minPtsAux_, minPts_);
+
+    if (fast) dbscan.generateClusters_fast();
+    else dbscan.generateClusters();
 
     return dbscan.getClusters();
 }

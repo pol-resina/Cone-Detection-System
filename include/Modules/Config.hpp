@@ -41,6 +41,7 @@ struct Params{
             struct {
                 std::string ground;
                 std::string clusters;
+                std::string observations;
             } output;
         } topics;
     } common;

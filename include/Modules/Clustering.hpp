@@ -1,29 +1,27 @@
 #ifndef CLUSTERING_HPP
 #define CLUSTERING_HPP
 
-#include "Modules/Config.hpp"
+
 #include "Utils/Dbscan.hpp"
+#include "Modules/Config.hpp"
 
-#include <vector>
-
-class Clustering{
+class Clustering {
     private:
-        /* -------------------------- Private Attributes -------------------------- */
-        int octreeResolution_;
-        int eps_;
-        int minPtsAux_;
-        int minPts_;
-        /* -------------------------- Private Methods --------------------------- */
-
+    // Private Atributes
+    float eps_;
+    int minPts_, minPtsAux_, octreeResolution_;
+    
     public:
-        Clustering(Params Config){
-            this->octreeResolution_ = Config.dbscan.octreeResolution;
-            this->eps_ = Config.dbscan.eps;
-            this->minPtsAux_ = Config.dbscan.minPtsAux;
-            this->minPts_ = Config.dbscan.minPts;
-        }
+    // Constructor
+    Clustering(Params Config){
+        this->eps_ = Config.dbscan.eps;
+        this->minPts_ = Config.dbscan.minPts;
+        this->minPtsAux_ = Config.dbscan.minPtsAux;
+        this->octreeResolution_ = Config.dbscan.octreeResolution;
+    }
 
-        std::vector<dbScanSpace::cluster> clusterize_dbScan(const pcl::PointCloud<pcl::PointXYZI>::Ptr &input_cloud);
-
+    std::vector<dbScanSpace::cluster> generateClusters(const pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground, bool fast);
+    
 };
+
 #endif // CLUSTERING_HPP

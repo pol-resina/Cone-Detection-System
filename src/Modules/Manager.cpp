@@ -9,15 +9,16 @@
 
 extern struct Params Config;
 
-int i=0;
-
-Manager::Manager(ros::NodeHandle &nh): ransac(Config){
-    pubGround = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.ground, 20);
-    pubClusters = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.clusters, 20);
-    this->publish_debug_ = Config.manager.publish_debug;
+Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config){
+  pubGround = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.ground, 20);
+  pubClusters = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.clusters, 20);
+  pubObs = nh.advertise<as_msgs::ObservationArray>(Config.common.topics.output.observations, 20);
+  this->publish_debug_ = Config.manager.publish_debug;
 }
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
+    this->header_ = cloud_msg->header;
+
     if (cloud_msg == nullptr) return;
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -33,43 +34,19 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
       this->publishGround(msg);
     }
     
-    std::vector<htr::Point3D> groupA;
-    dbScanSpace::dbscan dbscan;
-
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloudRGB(new pcl::PointCloud<pcl::PointXYZRGB>);
-    cloudRGB->width = no_ground->width;
-    cloudRGB->height = no_ground->height;
-    cloudRGB->is_dense = no_ground->is_dense;
-    cloudRGB->points.resize(cloudRGB->width * cloudRGB->height);
-
-    for (size_t i = 0; i < no_ground->points.size(); ++i)
-    {
-      pcl::PointXYZI point_i = no_ground->points[i];
-
-      pcl::PointXYZRGB point_rgb;
-      point_rgb.x = point_i.x;
-      point_rgb.y = point_i.y;
-      point_rgb.z = point_i.z;
-
-      point_rgb.r = 255;
-      point_rgb.g = 255;
-      point_rgb.b = 255;
-
-      cloudRGB->points[i] = point_rgb;
-    }
-
-    
-    dbscan.init(groupA, cloudRGB, Config.dbscan.octreeResolution, Config.dbscan.eps, Config.dbscan.minPtsAux, Config.dbscan.minPts);
-    dbscan.generateClusters_fast();
-
-    this->publishClusters(dbscan.getClusters());
+    // generate clusters
+    auto clusters = clustering.generateClusters(no_ground, false);
+    // publish clusters
+    this->publishClusters(clusters);
+    //publish observations
+    this->publishObservations(clusters);
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     std::cout << "Elapsed time: " << elapsed.count() * 1000 << "ms" << std::endl;
 }
 
-void Manager::publishClusters(std::vector<dbScanSpace::cluster> clusters){
+void Manager::publishClusters(const std::vector<dbScanSpace::cluster> &clusters){
 
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr global_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
@@ -99,13 +76,38 @@ void Manager::publishClusters(std::vector<dbScanSpace::cluster> clusters){
   sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
   pcl::toROSMsg(*global_cloud, *output);
 
-  output->header.frame_id = "global";
+  output->header.frame_id = "velodyne";
   output->header.stamp = ros::Time::now();
   this->pubClusters.publish(output);
 }
 
-void Manager::publishGround(sensor_msgs::PointCloud2 msg){
-    msg.header.frame_id = "global";
-    msg.header.stamp = ros::Time::now();
-    this->pubGround.publish(msg);
+void Manager::publishGround(sensor_msgs::PointCloud2 &msg){
+  msg.header.frame_id = "velodyne";
+  msg.header.stamp = ros::Time::now();
+  this->pubGround.publish(msg);
+}
+
+void Manager::publishObservations(std::vector<dbScanSpace::cluster> &clusters){
+  pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
+  as_msgs::ObservationArray obs_vector;
+  for (dbScanSpace::cluster c: clusters){
+    as_msgs::Observation obs;
+    c.calculateCentroid();
+    obs.centroid.x = c.centroid3D.x;
+    obs.centroid.y = c.centroid3D.y;
+    obs.centroid.z = c.centroid3D.z;
+    for (pcl::mod_pointXYZ p: c.clusterPoints){
+      pcl::PointXYZI point;
+      point.x = p.x;
+      point.y = p.y;
+      point.z = p.z;
+      cloud->points.push_back(point);
+    }
+    obs_vector.observations.push_back(obs);
+    cloud->clear();
+  }
+
+  obs_vector.header = this->header_;
+  obs_vector.header.stamp = ros::Time::now();
+  this->pubObs.publish(obs_vector);
 }
