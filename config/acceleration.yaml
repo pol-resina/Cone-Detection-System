@@ -1,4 +1,4 @@
-# This file contains the default configuration for the node
+# This file contains the configuration for the node
 
 # General parameters
 common:
@@ -14,20 +14,20 @@ manager:
   publish_debug: true
 
 dbscan:
-  octreeResolution: 200
-  eps: 1
+  octreeResolution: 100
+  eps: 2
   minPtsAux: 2 
-  minPts: 2
+  minPts: 3
 
 ransac:
   ground_segmentation_mode: true              # True: Ransac / False: Linefit
   publish_ground: true                        # Publish ground
   publish_obstacle: true                      # Publish obstacle
-  minz: -3                                    # min z value of the point cloud
+  minz: -4                                    # min z value of the point cloud
   maxz: 1                                     # max z value of the point cloud
-  max_x: 40                                   # max x value of the point cloud
-  max_y: 10                                   # max y value of the point cloud
-  min_y: -10                                  # min y value of the point cloud
+  max_x: 200                                  # max x value of the point cloud
+  max_y: 6                                    # max y value of the point cloud
+  min_y: -6                                   # min y value of the point cloud
   x_car_limit_p: 0.3                          # The 4 values of car limit are because
   x_car_limit_n: -0.3                         # there are parts of the car that are always
   y_car_limit_p: 0.3                          # reached by the LiDAR laser beams and same position

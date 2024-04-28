@@ -26,6 +26,7 @@ class Manager {
     /* PUBLISHERS  */
     void publishGround(sensor_msgs::PointCloud2 &msg);
     void publishClusters(const std::vector<dbScanSpace::cluster> &clusters);
+    void publishClusters2(const pcl::PointCloud<pcl::PointXYZI> &clusters);
     void publishObservations(std::vector<dbScanSpace::cluster> &clusters);
 
   public:

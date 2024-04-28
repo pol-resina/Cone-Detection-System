@@ -18,7 +18,6 @@ Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config){
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
     this->header_ = cloud_msg->header;
-
     if (cloud_msg == nullptr) return;
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -35,11 +34,27 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     }
     
     // generate clusters
-    auto clusters = clustering.generateClusters(no_ground, false);
+    // First approach
+    // auto clusters = clustering.generateClusters(no_ground, false);
+    // Second approach
+    std::vector<std::vector<int>> cluster_index;
+    clustering.dbscan(no_ground, cluster_index, Config.dbscan.eps, Config.dbscan.minPts);
+    pcl::PointCloud<pcl::PointXYZI> cloud_cluster;
+    cloud_cluster.width = no_ground->width;
+    cloud_cluster.height = no_ground->height;
+
+    cloud_cluster.resize(no_ground->size());
+    for (size_t i = 0; i < cluster_index.size(); i++){
+      for (size_t j = 0; j < cluster_index[i].size(); j++){
+        cloud_cluster.points[cluster_index[i][j]].x = no_ground->points[cluster_index[i][j]].x;
+        cloud_cluster.points[cluster_index[i][j]].y = no_ground->points[cluster_index[i][j]].y;
+        cloud_cluster.points[cluster_index[i][j]].z = no_ground->points[cluster_index[i][j]].z;
+      }
+    }
     // publish clusters
-    this->publishClusters(clusters);
+    this->publishClusters2(cloud_cluster);
     //publish observations
-    this->publishObservations(clusters);
+    // this->publishObservations(clusters);
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
@@ -75,6 +90,17 @@ void Manager::publishClusters(const std::vector<dbScanSpace::cluster> &clusters)
 
   sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
   pcl::toROSMsg(*global_cloud, *output);
+
+  output->header.frame_id = "velodyne";
+  output->header.stamp = ros::Time::now();
+  this->pubClusters.publish(output);
+}
+
+void Manager::publishClusters2(const pcl::PointCloud<pcl::PointXYZI> &clusters){
+  sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
+  pcl::toROSMsg(clusters, *output);
+
+  ROS_INFO("clusters size: %d", clusters.size());
 
   output->header.frame_id = "velodyne";
   output->header.stamp = ros::Time::now();

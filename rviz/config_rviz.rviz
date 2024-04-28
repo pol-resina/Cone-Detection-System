@@ -63,7 +63,7 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz/PointCloud2
       Color: 255; 255; 255
-      Color Transformer: RGB8
+      Color Transformer: Intensity
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -76,7 +76,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.20000000298023224
       Style: Points
-      Topic: /ftfcd/debug/ground
+      Topic: /ftfcd/debug/clusters
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -137,7 +137,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 7.021914958953857
+      Distance: 0.06547896564006805
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -145,17 +145,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: -5.714442253112793
+        Y: -2.4069366455078125
+        Z: 17.252817153930664
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.37979745864868164
+      Pitch: 0.9447970390319824
       Target Frame: <Fixed Frame>
-      Yaw: 3.0704152584075928
+      Yaw: 3.390455484390259
     Saved: ~
 Window Geometry:
   Displays:

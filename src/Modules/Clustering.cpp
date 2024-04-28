@@ -35,3 +35,51 @@ std::vector<dbScanSpace::cluster> Clustering::generateClusters(const pcl::PointC
 
     return dbscan.getClusters();
 }
+
+bool Clustering::dbscan(const pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, 
+            std::vector<std::vector<int>> &cluster_index, 
+            const double &eps, const int &size){
+
+  if (!cloud->size()) return false;
+  pcl::KdTreeFLANN<pcl::PointXYZI> kdtree;
+  kdtree.setInputCloud(cloud);
+  std::vector<bool> cloud_processed(cloud->size(), false);
+
+  for (size_t i = 0; i < cloud->points.size(); i++){
+    if (cloud_processed[i]) continue;
+
+    std::vector<int> seed_queue;
+
+    std::vector<int> indices_cloud;
+    std::vector<float> dists_cloud;
+    if (kdtree.radiusSearch(cloud->points[i], eps, indices_cloud, dists_cloud) >= size) {
+      seed_queue.push_back(i);
+      cloud_processed[i] = true;
+    }
+    else continue;
+
+    int seed_index = 0;
+    while (seed_index < seed_queue.size()){
+      std::vector<int> indices;
+      std::vector<float> dists;
+      if (kdtree.radiusSearch(cloud->points[seed_queue[seed_index]], eps, indices, dists) < size){
+        ++seed_index;
+        continue;
+      }
+      for (size_t j = 0; j < indices.size(); j++){
+        if (cloud_processed[indices[j]]){
+          continue;
+        }
+        else{
+          seed_queue.push_back(indices[j]);
+          cloud_processed[indices[j]] = true;
+        }
+      }
+      ++seed_index;
+    }
+    cluster_index.push_back(seed_queue);    
+  }
+
+  if (cluster_index.size()) return true;
+  else return false;
+}
