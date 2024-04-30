@@ -40,6 +40,8 @@ add_executable(ftfcd
   src/Modules/Ransac.cpp
   src/Modules/Clustering.cpp
 
+  src/Objects/Params.cpp
+
   src/Utils/Cluster.cpp
   src/Utils/Dbscan.cpp
   src/Utils/OctreeGenerator.cpp
