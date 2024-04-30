@@ -7,7 +7,6 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
     pcl::PointCloud<pcl::PointXYZI>::Ptr preprocCloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::PassThrough<pcl::PointXYZI> pass;
 
-    // pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::SACSegmentation<pcl::PointXYZI> seg;
     
     pass.setInputCloud(cloud);

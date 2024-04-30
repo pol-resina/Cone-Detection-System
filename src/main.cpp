@@ -32,7 +32,6 @@ void import_params(ros::NodeHandle &nh){
     nh.param<std::string>("/ftfcd/common/topics/output/ground", Config.common.topics.output.ground, "/ftfcd/ground");
     nh.param<std::string>("/ftfcd/common/topics/output/clusters", Config.common.topics.output.clusters, "/ftfcd/clusters");
     nh.param<std::string>("/ftfcd/common/topics/output/observations", Config.common.topics.output.observations, "/AS/P/ftfcd/observations");
-
     // MANAGER
     nh.param<bool>("/ftfcd/manager/publish_debug", Config.manager.publish_debug, true);
 
@@ -59,6 +58,7 @@ void import_params(ros::NodeHandle &nh){
     nh.param<int>("dbscan/eps", Config.dbscan.eps, 40);
     nh.param<int>("dbscan/minPtsAux", Config.dbscan.minPtsAux, 5);
     nh.param<int>("dbscan/minPts", Config.dbscan.minPts, 5);
+    nh.param<int>("dbscan/maxPoints", Config.dbscan.maxPoints, 200);
 }
 
 

@@ -30,6 +30,7 @@ struct Params{
         int eps;
         int minPtsAux;
         int minPts;
+        int maxPoints;
     } dbscan;
 
 

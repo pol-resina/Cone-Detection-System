@@ -38,7 +38,7 @@ std::vector<dbScanSpace::cluster> Clustering::generateClusters(const pcl::PointC
 
 bool Clustering::dbscan(const pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, 
             std::vector<std::vector<int>> &cluster_index, 
-            const double &eps, const int &size){
+            const double &eps, const int &size, const int &maxPoints){
 
   if (!cloud->size()) return false;
   pcl::KdTreeFLANN<pcl::PointXYZI> kdtree;
@@ -76,8 +76,10 @@ bool Clustering::dbscan(const pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud,
         }
       }
       ++seed_index;
+
+      if (seed_queue.size() > maxPoints) break;
     }
-    cluster_index.push_back(seed_queue);    
+    if (seed_queue.size() <= maxPoints) cluster_index.push_back(seed_queue);    
   }
 
   if (cluster_index.size()) return true;

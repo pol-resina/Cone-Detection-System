@@ -9,23 +9,24 @@ common:
       ground: "/ftfcd/debug/ground"
       clusters: "/ftfcd/debug/clusters"
       observations: "/AS/P/ftfcd/observations"
+      timecsv: "timestampms.csv"
 
 manager:
   publish_debug: true
 
 dbscan:
   octreeResolution: 100
-  eps: 2
+  eps: 1
   minPtsAux: 2 
-  minPts: 3
+  minPts: 2
 
 ransac:
   ground_segmentation_mode: true              # True: Ransac / False: Linefit
   publish_ground: true                        # Publish ground
   publish_obstacle: true                      # Publish obstacle
-  minz: -4                                    # min z value of the point cloud
+  minz: -3                                    # min z value of the point cloud
   maxz: 1                                     # max z value of the point cloud
-  max_x: 200                                  # max x value of the point cloud
+  max_x: 100                                  # max x value of the point cloud
   max_y: 6                                    # max y value of the point cloud
   min_y: -6                                   # min y value of the point cloud
   x_car_limit_p: 0.3                          # The 4 values of car limit are because

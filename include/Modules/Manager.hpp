@@ -25,9 +25,11 @@ class Manager {
 
     /* PUBLISHERS  */
     void publishGround(sensor_msgs::PointCloud2 &msg);
-    void publishClusters(const std::vector<dbScanSpace::cluster> &clusters);
-    void publishClusters2(const pcl::PointCloud<pcl::PointXYZI> &clusters);
-    void publishObservations(std::vector<dbScanSpace::cluster> &clusters);
+    void publishClusters(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &clusters);
+    void publishObservations(as_msgs::ObservationArray &obs_vector);
+
+    /* SAVE TIME*/
+    void saveTime(const std::string &filename, std::chrono::duration<double> elapsed);
 
   public:
     // Constructor
