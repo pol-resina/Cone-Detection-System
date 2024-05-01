@@ -23,7 +23,7 @@ class Clustering {
     Clustering(Params Config){
         this->eps_ = Config.dbscan.eps;
         this->minPts_ = Config.dbscan.minPts;
-        this->maxPoints_ = Config.dbscan.maxPoints;
+        this->maxPoints_ = Config.dbscan.maxPts;
     }
 
     bool dbscan(const pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, 

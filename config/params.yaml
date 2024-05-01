@@ -16,7 +16,7 @@ manager:
 dbscan:                                       # DBSCAN algorithm (check there are 2 implementations of the algorithm in the code)
   eps: 0.5                                    # Epsilon value for the DBSCAN algorithm
   minPts: 2                                   # MinPts for core points (both implementations)
-  maxPts: 5000                                  # Max number of points for the DBSCAN algorithm (second implementation)
+  maxPts: 200                                  # Max number of points for the DBSCAN algorithm (second implementation)
 
 ransac:
   ground_segmentation_mode: true              # True: Ransac / False: Linefit

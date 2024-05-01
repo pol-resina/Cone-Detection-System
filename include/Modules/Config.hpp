@@ -28,7 +28,7 @@ struct Params{
     struct Dbscan {
         int eps;
         int minPts;
-        int maxPoints;
+        int maxPts;
     } dbscan;
 
 

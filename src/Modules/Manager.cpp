@@ -3,7 +3,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
-#include <pcl/common/io.h> 
+#include <pcl/common/io.h>
 #include <pcl/common/centroid.h> // compute3DCentroid
 #include <random>
 #include <string>
@@ -71,21 +71,43 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     as_msgs::Observation obs;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cluster(new pcl::PointCloud<pcl::PointXYZRGB>);
 
+    float min_x, max_x, min_y, max_y, min_z, max_z;
+    min_x = max_x = no_ground->points[cluster_index[i][0]].x;
+    min_y = max_y = no_ground->points[cluster_index[i][0]].y;
+    min_z = max_z = no_ground->points[cluster_index[i][0]].z;
+
     for (size_t j = 0; j < cluster_index[i].size(); j++){
       pcl::PointXYZRGB point;
       point.x = no_ground->points[cluster_index[i][j]].x;
       point.y = no_ground->points[cluster_index[i][j]].y;
       point.z = no_ground->points[cluster_index[i][j]].z;
 
+      if (point.x < min_x) min_x = point.x;
+      if (point.x > max_x) max_x = point.x;
+      if (point.y < min_y) min_y = point.y;
+      if (point.y > max_y) max_y = point.y;
+      if (point.z < min_z) min_z = point.z;
+      if (point.z > max_z) max_z = point.z;
+      
       point.r = random_number1;
       point.b = random_number2;
       point.g = random_number3;
 
-      // cloud_cluster->points[cluster_index[i][j]] = point;
       cluster->points.push_back(point);
     }
 
+    // CLASSIFICATION
+    float dist_x = max_x - min_x;
+    float dist_y = max_y - min_y;
+    float dist_z = max_z - min_z;
+    if (cluster->size() > Config.dbscan.maxPts) continue;
+    if (dist_z > 0.6) continue;
+    if (dist_x > 0.6) continue;
+    if (dist_y > 0.6) continue;
+    // END CLASSIFICATION
+
     *cloud_cluster += *cluster;
+    
 
     Eigen::Vector4f centroid;
     pcl::compute3DCentroid(*cluster, centroid);
