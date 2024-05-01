@@ -14,11 +14,9 @@ manager:
   publish_debug: true                         # Publish debug information
 
 dbscan:                                       # DBSCAN algorithm (check there are 2 implementations of the algorithm in the code)
-  octreeResolution: 100                       # Octree resolution for first implementation
-  eps: 1                                      # Epsilon value for the DBSCAN algorithm
-  minPtsAux: 2                                # MinPts for border points (first implementation)
+  eps: 0.5                                    # Epsilon value for the DBSCAN algorithm
   minPts: 2                                   # MinPts for core points (both implementations)
-  maxPts: 8                                 # Max number of points for the DBSCAN algorithm (second implementation)
+  maxPts: 5000                                  # Max number of points for the DBSCAN algorithm (second implementation)
 
 ransac:
   ground_segmentation_mode: true              # True: Ransac / False: Linefit
@@ -26,7 +24,7 @@ ransac:
   publish_obstacle: true                      # Publish obstacle
   minz: -3                                    # min z value of the point cloud
   maxz: 1                                     # max z value of the point cloud
-  max_x: 25                                   # max x value of the point cloud
+  max_x: 35                                   # max x value of the point cloud
   max_y: 20                                   # max y value of the point cloud
   min_y: -20                                  # min y value of the point cloud
   x_car_limit_p: 0.3                          # The 4 values of car limit are because

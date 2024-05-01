@@ -6,7 +6,6 @@
 #include "sensor_msgs/PointCloud2.h"
 #include "Modules/Config.hpp"
 #include "Modules/Ransac.hpp"
-#include "Utils/Dbscan.hpp"
 #include "Modules/Clustering.hpp"
 
 class Manager {
@@ -21,7 +20,6 @@ class Manager {
     bool publish_debug_;
 
     std_msgs::Header header_;
-
 
     /* PUBLISHERS  */
     void publishGround(sensor_msgs::PointCloud2 &msg);

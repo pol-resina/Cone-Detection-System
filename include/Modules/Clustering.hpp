@@ -1,10 +1,8 @@
 #ifndef CLUSTERING_HPP
 #define CLUSTERING_HPP
 
-#include "Utils/Dbscan.hpp"
 #include "Modules/Config.hpp"
 
-#pragma once
 #include <string>
 #include <vector>
 
@@ -18,24 +16,18 @@ class Clustering {
     private:
     // Private Atributes
     float eps_;
-    int minPts_, minPtsAux_, octreeResolution_, maxPoints_;
+    int minPts_, maxPoints_;
     
     public:
     // Constructor
     Clustering(Params Config){
         this->eps_ = Config.dbscan.eps;
         this->minPts_ = Config.dbscan.minPts;
-        this->minPtsAux_ = Config.dbscan.minPtsAux;
-        this->octreeResolution_ = Config.dbscan.octreeResolution;
         this->maxPoints_ = Config.dbscan.maxPoints;
     }
 
-    // 1rst dbscan approach
-    std::vector<dbScanSpace::cluster> generateClusters(const pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground, bool fast);
-    // 2n approach: dbscan from scratch
     bool dbscan(const pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, 
-                std::vector<std::vector<int>> &cluster_index, 
-                const double &eps, const int &size, const int &maxPoints);
+                std::vector<std::vector<int>> &cluster_index);
 
 };
 

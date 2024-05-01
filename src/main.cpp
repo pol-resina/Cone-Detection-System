@@ -54,11 +54,9 @@ void import_params(ros::NodeHandle &nh){
     nh.param<double>("ransac/plane_angle", Config.ransac.plane_angle, 0.3);
 
     // DBSCAN
-    nh.param<int>("dbscan/octreeResolution", Config.dbscan.octreeResolution, 120);
     nh.param<int>("dbscan/eps", Config.dbscan.eps, 40);
-    nh.param<int>("dbscan/minPtsAux", Config.dbscan.minPtsAux, 5);
     nh.param<int>("dbscan/minPts", Config.dbscan.minPts, 5);
-    nh.param<int>("dbscan/maxPoints", Config.dbscan.maxPoints, 200);
+    nh.param<int>("dbscan/maxPoints", Config.dbscan.maxPoints, 8);
 }
 
 

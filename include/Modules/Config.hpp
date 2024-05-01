@@ -26,9 +26,7 @@ struct Params{
     } ransac;
 
     struct Dbscan {
-        int octreeResolution;
         int eps;
-        int minPtsAux;
         int minPts;
         int maxPoints;
     } dbscan;

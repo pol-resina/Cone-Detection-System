@@ -4,6 +4,7 @@
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <pcl/common/io.h> 
+#include <pcl/common/centroid.h> // compute3DCentroid
 #include <random>
 #include <string>
 
@@ -19,10 +20,10 @@ Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config){
 }
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
-  this->header_ = cloud_msg->header;
   if (cloud_msg == nullptr) return;
 
-  auto start = std::chrono::high_resolution_clock::now();
+  auto start = std::chrono::high_resolution_clock::now(); // start timer
+  this->header_ = cloud_msg->header;
 
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
   pcl::fromROSMsg(*cloud_msg, *cloud);
@@ -31,6 +32,7 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   sensor_msgs::PointCloud2 msg;
   ransac.removeGround(cloud, msg, no_ground);
 
+  // save time ransac
   if (!clear_csv) {
     std::ofstream file;
     file.open("/home/pol/Desktop/timeransac.csv", std::ofstream::out | std::ofstream::trunc);
@@ -39,17 +41,16 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   auto end1 = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed1 = end1 - start;
   this->saveTime("/home/pol/Desktop/timeransac.csv", elapsed1);
+  // save time ransac
 
+  // publish ground
   if (publish_debug_) {
     this->publishGround(msg);
   }
   
-  // generate clusters
-  // First approach
-  // auto clusters = clustering.generateClusters(no_ground, false);
-  // Second approach
+  // Clustering
   std::vector<std::vector<int>> cluster_index;
-  clustering.dbscan(no_ground, cluster_index, Config.dbscan.eps, Config.dbscan.minPts, Config.dbscan.maxPoints);
+  clustering.dbscan(no_ground, cluster_index);
 
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster(new pcl::PointCloud<pcl::PointXYZRGB>);
   cloud_cluster->width = no_ground->width;
@@ -67,30 +68,39 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     int random_number2 = dis(gen);
     int random_number3 = dis(gen);
 
-    auto scx = 0.0;
-    auto scy = 0.0;
-    auto scz = 0.0;
-
     as_msgs::Observation obs;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cluster(new pcl::PointCloud<pcl::PointXYZRGB>);
+
     for (size_t j = 0; j < cluster_index[i].size(); j++){
       pcl::PointXYZRGB point;
       point.x = no_ground->points[cluster_index[i][j]].x;
       point.y = no_ground->points[cluster_index[i][j]].y;
       point.z = no_ground->points[cluster_index[i][j]].z;
 
-      scx += point.x;
-      scy += point.y;
-      scz += point.z;
-
       point.r = random_number1;
       point.b = random_number2;
       point.g = random_number3;
 
-      cloud_cluster->points[cluster_index[i][j]] = point;
+      // cloud_cluster->points[cluster_index[i][j]] = point;
+      cluster->points.push_back(point);
     }
-    obs.centroid.x = scx/cluster_index[i].size();
-    obs.centroid.y = scy/cluster_index[i].size();
-    obs.centroid.z = scz/cluster_index[i].size();
+
+    *cloud_cluster += *cluster;
+
+    Eigen::Vector4f centroid;
+    pcl::compute3DCentroid(*cluster, centroid);
+
+    geometry_msgs::Point centroid_msg;
+    centroid_msg.x = centroid[0];
+    centroid_msg.y = centroid[1];
+    centroid_msg.z = centroid[2];
+
+    obs.centroid = centroid_msg;
+
+    sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
+    pcl::toROSMsg(*cluster, *output);
+
+    obs.cloud = *output;
 
     obs_vector.observations.push_back(obs);
   }
@@ -142,63 +152,3 @@ void Manager::saveTime(const std::string &filename, std::chrono::duration<double
   file << elapsed.count() * 1000 << std::endl;
   file.close();
 }
-
-// void Manager::publishClusters(const std::vector<dbScanSpace::cluster> &clusters){
-
-//   pcl::PointCloud<pcl::PointXYZRGB>::Ptr global_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-
-//   std::cout << "size: " << clusters.size() << std::endl;
-//   for (auto &cluster : clusters){
-//     std::random_device rd;
-//     std::mt19937 gen(rd());
-//     std::uniform_int_distribution<> dis(0, 255);
-
-//     int random_number1 = dis(gen);
-//     int random_number2 = dis(gen);
-//     int random_number3 = dis(gen);
-//     for (auto &pointCluster : cluster.clusterPoints){
-//       pcl::PointXYZRGB point;
-//       point.x = pointCluster.x;
-//       point.y = pointCluster.y;
-//       point.z = pointCluster.z;
-
-//       point.r = random_number1;
-//       point.b = random_number2;
-//       point.g = random_number3;
-
-//       global_cloud->points.push_back(point);
-//     }
-//   }
-
-//   sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
-//   pcl::toROSMsg(*global_cloud, *output);
-
-//   output->header.frame_id = "velodyne";
-//   output->header.stamp = ros::Time::now();
-//   this->pubClusters.publish(output);
-// }
-
-// void Manager::publishObservations(std::vector<dbScanSpace::cluster> &clusters){
-//   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
-//   as_msgs::ObservationArray obs_vector;
-//   for (dbScanSpace::cluster c: clusters){
-//     as_msgs::Observation obs;
-//     c.calculateCentroid();
-//     obs.centroid.x = c.centroid3D.x;
-//     obs.centroid.y = c.centroid3D.y;
-//     obs.centroid.z = c.centroid3D.z;
-//     for (pcl::mod_pointXYZ p: c.clusterPoints){
-//       pcl::PointXYZI point;
-//       point.x = p.x;
-//       point.y = p.y;
-//       point.z = p.z;
-//       cloud->points.push_back(point);
-//     }
-//     obs_vector.observations.push_back(obs);
-//     cloud->clear();
-//   }
-
-//   obs_vector.header = this->header_;
-//   obs_vector.header.stamp = ros::Time::now();
-//   this->pubObs.publish(obs_vector);
-// }
