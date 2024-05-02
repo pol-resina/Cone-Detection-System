@@ -1,31 +1,33 @@
 #ifndef MANAGER_HPP
 #define MANAGER_HPP
 
-// #include <as_msgs/ObservationArray.h>
-// #include <geometry_msgs/PoseArray.h>
-// #include <nav_msgs/Odometry.h>
-// #include <pcl/filters/crop_box.h>
-// #include <pcl/octree/octree_search.h>
-// #include <pcl_conversions/pcl_conversions.h>
-// #include <ros/ros.h>
+#include <as_msgs/ObservationArray.h>
 
 #include "sensor_msgs/PointCloud2.h"
 #include "Modules/Config.hpp"
 #include "Modules/Ransac.hpp"
-#include "Utils/Dbscan.hpp"
+#include "Modules/Clustering.hpp"
 
 class Manager {
   private:
     ros::Publisher pubGround;
     ros::Publisher pubClusters;
+    ros::Publisher pubObs;
     
     Ransac ransac;
+    Clustering clustering;
 
     bool publish_debug_;
 
-    void publishGround(sensor_msgs::PointCloud2 msg);
+    std_msgs::Header header_;
 
-    void publishClusters(std::vector<dbScanSpace::cluster> clusters);
+    /* PUBLISHERS  */
+    void publishGround(sensor_msgs::PointCloud2 &msg);
+    void publishClusters(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &clusters);
+    void publishObservations(as_msgs::ObservationArray &obs_vector);
+
+    /* SAVE TIME*/
+    void saveTime(const std::string &filename, std::chrono::duration<double> elapsed);
 
   public:
     // Constructor

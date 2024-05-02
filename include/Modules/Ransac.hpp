@@ -25,6 +25,7 @@ class Ransac {
     double dist_threshold_, plane_angle_;
     bool vis_outliers_;
 
+
     /* -------------------------- Private Methods --------------------------- */
 
   public:

@@ -6,7 +6,7 @@
     <node pkg="ecthor" type="ecthor" name="ecthor" output="screen" /> -->
 
     <group ns = "/ftfcd">
-        <rosparam command="load" file="$(find ftfcd)/config/params.yaml"/>
+        <rosparam command="load" file="$(find ftfcd)/config/acceleration.yaml"/>
         <node pkg="ftfcd" type="ftfcd" name="ftfcd" output="screen"/>
         <node type = "rviz" name = "rviz" pkg = "rviz" args = "-d $(find ftfcd)/rviz/config_rviz.rviz"/>
     </group>

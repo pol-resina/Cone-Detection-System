@@ -30,6 +30,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+
 add_executable(ftfcd
   include/Modules
 
@@ -37,10 +38,7 @@ add_executable(ftfcd
 
   src/Modules/Manager.cpp
   src/Modules/Ransac.cpp
-
-  src/Utils/Cluster.cpp
-  src/Utils/Dbscan.cpp
-  src/Utils/OctreeGenerator.cpp
+  src/Modules/Clustering.cpp
 )
 
 add_dependencies(${PROJECT_NAME} as_msgs_generate_messages_cpp)

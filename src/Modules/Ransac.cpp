@@ -1,5 +1,5 @@
 #include "Modules/Ransac.hpp"
-#include <ros/ros.h>  //llibreria de ros!
+#include <ros/ros.h> 
 
 void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_msgs::PointCloud2 &no_ground_msg,
                         pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground){
@@ -7,7 +7,6 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
     pcl::PointCloud<pcl::PointXYZI>::Ptr preprocCloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::PassThrough<pcl::PointXYZI> pass;
 
-    // pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::SACSegmentation<pcl::PointXYZI> seg;
     
     pass.setInputCloud(cloud);
@@ -20,7 +19,6 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
     pass.setFilterFieldName("y");
     pass.setFilterLimits(this->y_car_limit_n_, this->y_car_limit_p_);
     pass.filter(*cloud);
-
     
     pass.setInputCloud(cloud);
     pass.setFilterFieldName("x");
@@ -63,3 +61,4 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
 
     pcl::toROSMsg(*no_ground,no_ground_msg);
 }
+

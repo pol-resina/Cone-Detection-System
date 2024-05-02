@@ -26,10 +26,15 @@ struct Params{
     } ransac;
 
     struct Dbscan {
-        int octreeResolution;
         int eps;
-        int minPtsAux;
         int minPts;
+        int maxPts;
+        struct Classification {
+            double distX;
+            double distY;
+            double distZ;
+        } classification;
+
     } dbscan;
 
 
@@ -41,6 +46,7 @@ struct Params{
             struct {
                 std::string ground;
                 std::string clusters;
+                std::string observations;
             } output;
         } topics;
     } common;
