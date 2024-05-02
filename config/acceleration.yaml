@@ -1,4 +1,4 @@
-# This file contains the configuration for the node
+# This file contains the default configuration for the node
 
 # General parameters
 common:
@@ -9,31 +9,33 @@ common:
       ground: "/ftfcd/debug/ground"
       clusters: "/ftfcd/debug/clusters"
       observations: "/AS/P/ftfcd/observations"
-      timecsv: "timestampms.csv"
 
 manager:
-  publish_debug: true
+  publish_debug: true                         # Publish debug information
 
-dbscan:
-  octreeResolution: 100
-  eps: 1
-  minPtsAux: 2 
-  minPts: 2
+dbscan:                                       # DBSCAN algorithm (check there are 2 implementations of the algorithm in the code)
+  eps: 0.8                                    # Epsilon value for the DBSCAN algorithm
+  minPts: 2                                   # MinPts for core points (both implementations)
+  maxPts: 150                                  # Max number of points for the DBSCAN algorithm (second implementation)
+  classification:
+    distX: 1
+    distY: 1
+    distZ: 1
 
 ransac:
   ground_segmentation_mode: true              # True: Ransac / False: Linefit
   publish_ground: true                        # Publish ground
   publish_obstacle: true                      # Publish obstacle
   minz: -3                                    # min z value of the point cloud
-  maxz: 1                                     # max z value of the point cloud
-  max_x: 100                                  # max x value of the point cloud
-  max_y: 6                                    # max y value of the point cloud
-  min_y: -6                                   # min y value of the point cloud
+  maxz: 0.6                                     # max z value of the point cloud
+  max_x: 50                                   # max x value of the point cloud
+  max_y: 7                                   # max y value of the point cloud
+  min_y: -7                                  # min y value of the point cloud
   x_car_limit_p: 0.3                          # The 4 values of car limit are because
   x_car_limit_n: -0.3                         # there are parts of the car that are always
   y_car_limit_p: 0.3                          # reached by the LiDAR laser beams and same position
   y_car_limit_n: -0.3                         # No need to look for them always
-  max_iterations: 400                         # max iterations of the ransac algorithm (https://en.wikipedia.org/wiki/Random_sample_consensus)
+  max_iterations: 200                         # max iterations of the ransac algorithm (https://en.wikipedia.org/wiki/Random_sample_consensus)
   dist_threshold: 0.1                         # distance threshold of the ransac algorithm   s'ha de quedar a 0.1 sino els cons perden massa punts
   plane_angle: 0.30                           # max angle of the plane 
   vis_outliers: false                         # visualize outliers

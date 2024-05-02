@@ -29,6 +29,12 @@ struct Params{
         int eps;
         int minPts;
         int maxPts;
+        struct Classification {
+            double distX;
+            double distY;
+            double distZ;
+        } classification;
+
     } dbscan;
 
 

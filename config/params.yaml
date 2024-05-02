@@ -14,19 +14,23 @@ manager:
   publish_debug: true                         # Publish debug information
 
 dbscan:                                       # DBSCAN algorithm (check there are 2 implementations of the algorithm in the code)
-  eps: 0.5                                    # Epsilon value for the DBSCAN algorithm
+  eps: 0.8                                    # Epsilon value for the DBSCAN algorithm
   minPts: 2                                   # MinPts for core points (both implementations)
-  maxPts: 200                                  # Max number of points for the DBSCAN algorithm (second implementation)
+  maxPts: 150                                  # Max number of points for the DBSCAN algorithm (second implementation)
+  classification:
+    distX: 0.4
+    distY: 0.4
+    distZ: 0.4
 
 ransac:
   ground_segmentation_mode: true              # True: Ransac / False: Linefit
   publish_ground: true                        # Publish ground
   publish_obstacle: true                      # Publish obstacle
   minz: -3                                    # min z value of the point cloud
-  maxz: 1                                     # max z value of the point cloud
-  max_x: 35                                   # max x value of the point cloud
-  max_y: 20                                   # max y value of the point cloud
-  min_y: -20                                  # min y value of the point cloud
+  maxz: 0.5                                     # max z value of the point cloud
+  max_x: 30                                   # max x value of the point cloud
+  max_y: 15                                   # max y value of the point cloud
+  min_y: -15                                  # min y value of the point cloud
   x_car_limit_p: 0.3                          # The 4 values of car limit are because
   x_car_limit_n: -0.3                         # there are parts of the car that are always
   y_car_limit_p: 0.3                          # reached by the LiDAR laser beams and same position

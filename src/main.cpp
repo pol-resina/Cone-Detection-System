@@ -57,6 +57,9 @@ void import_params(ros::NodeHandle &nh){
     nh.param<int>("dbscan/eps", Config.dbscan.eps, 40);
     nh.param<int>("dbscan/minPts", Config.dbscan.minPts, 5);
     nh.param<int>("dbscan/maxPts", Config.dbscan.maxPts, 1000);
+    nh.param<double>("dbscan/classification/distX", Config.dbscan.classification.distX, 0.5);
+    nh.param<double>("dbscan/classification/distY", Config.dbscan.classification.distY, 0.5);
+    nh.param<double>("dbscan/classification/distZ", Config.dbscan.classification.distZ, 1);
 }
 
 

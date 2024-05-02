@@ -101,9 +101,9 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     float dist_y = max_y - min_y;
     float dist_z = max_z - min_z;
     if (cluster->size() > Config.dbscan.maxPts) continue;
-    if (dist_z > 0.6) continue;
-    if (dist_x > 0.6) continue;
-    if (dist_y > 0.6) continue;
+    if (dist_z > Config.dbscan.classification.distX) continue;
+    if (dist_x > Config.dbscan.classification.distY) continue;
+    if (dist_y > Config.dbscan.classification.distX) continue;
     // END CLASSIFICATION
 
     *cloud_cluster += *cluster;
