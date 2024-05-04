@@ -36,6 +36,34 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
     pass.setFilterLimits(this->minz_, this->maxz_);
     pass.filter(*preprocCloud);
 
+    int index = 0;
+    pass.setInputCloud(preprocCloud);
+    pass.setFilterLimitsNegative(true);
+    while (index < preprocCloud->points.size()){
+        if(preprocCloud->points[index].z > 0.5){
+            int i;
+            pcl::PointXYZI point_1; point_1.x = 0; point_1.y = 0; point_1.z = 0;
+            for(i = 0; i < index; i++) if (std::abs(preprocCloud->points[index - i - 1].x - preprocCloud->points[index].x) > 0.2 || 
+                                           std::abs(preprocCloud->points[index - i - 1].y - preprocCloud->points[index].y) > 0.2){
+                point_1 = preprocCloud->points[index - i - 1];
+                break;
+            }
+            pass.setFilterFieldName("x");
+            pass.setFilterLimits(preprocCloud->points[index].x - 0.2, preprocCloud->points[index].x + 0.2);
+            pass.filter(*preprocCloud);
+
+            pass.setFilterFieldName("y");
+            pass.setFilterLimits(preprocCloud->points[index].y - 0.2, preprocCloud->points[index].y + 0.2);
+            pass.filter(*preprocCloud);
+            
+            index = index - i - 1;
+            while((point_1.x != preprocCloud->points[index].x ||
+                   point_1.y != preprocCloud->points[index].y ||
+                   point_1.z != preprocCloud->points[index].z) &&
+                   index > 0) index--;
+        } else index++;
+    }
+
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
     Eigen::Vector3f axis = Eigen::Vector3f(0.0, 0.0, 1.0);

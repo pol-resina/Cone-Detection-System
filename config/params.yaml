@@ -27,7 +27,7 @@ ransac:
   publish_ground: true                        # Publish ground
   publish_obstacle: true                      # Publish obstacle
   minz: -3                                    # min z value of the point cloud
-  maxz: 0.5                                     # max z value of the point cloud
+  maxz: 0.7                                     # max z value of the point cloud
   max_x: 30                                   # max x value of the point cloud
   max_y: 15                                   # max y value of the point cloud
   min_y: -15                                  # min y value of the point cloud
