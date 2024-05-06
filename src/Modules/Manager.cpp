@@ -17,6 +17,7 @@ Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config){
   pubClusters = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.clusters, 20);
   pubObs = nh.advertise<as_msgs::ObservationArray>(Config.common.topics.output.observations, 20);
   this->publish_debug_ = Config.manager.publish_debug;
+  pubPreRANSAC = nh.advertise<sensor_msgs::PointCloud2>("/ftfcd/debug/preRANSAC", 20);
 }
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
@@ -30,7 +31,7 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 
   pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
   sensor_msgs::PointCloud2 msg;
-  ransac.removeGround(cloud, msg, no_ground);
+  ransac.removeGround(cloud, msg, no_ground, pubPreRANSAC);
 
   // // save time ransac
   // if (!clear_csv) {
@@ -164,7 +165,7 @@ void Manager::publishGround(sensor_msgs::PointCloud2 &msg){
 
 void Manager::publishObservations(as_msgs::ObservationArray &obs_vector){
   obs_vector.header = this->header_;
-  obs_vector.header.stamp = ros::Time::now();
+  // obs_vector.header.stamp = ros::Time::now();
   this->pubObs.publish(obs_vector);
 }
 

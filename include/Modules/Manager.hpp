@@ -13,6 +13,7 @@ class Manager {
     ros::Publisher pubGround;
     ros::Publisher pubClusters;
     ros::Publisher pubObs;
+    ros::Publisher pubPreRANSAC;  // to debug
     
     Ransac ransac;
     Clustering clustering;

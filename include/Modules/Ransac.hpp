@@ -10,6 +10,8 @@
 #include <pcl/filters/passthrough.h>
 #include <pcl/point_types.h>
 #include <cmath>
+#include <pcl/filters/crop_box.h>
+#include <pcl/common/transforms.h>
 
 #include "Modules/Config.hpp"
 
@@ -50,7 +52,8 @@ class Ransac {
     //Ransac(){}
     void removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, 
                       sensor_msgs::PointCloud2 &no_ground_msg,
-                      pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground);
+                      pcl::PointCloud<pcl::PointXYZI>::Ptr &no_ground, 
+                      ros::Publisher pubPreRANSAC);
 
 };
 
