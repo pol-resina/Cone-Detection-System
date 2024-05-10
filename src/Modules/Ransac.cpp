@@ -24,6 +24,8 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
     // pass.setFilterFieldName("x");
     // pass.setFilterLimitsNegative(true);
     // pass.setFilterLimits(this->x_car_limit_n_, this->x_car_limit_p_);
+    // pass.setFilterFieldName("y");
+    // pass.setFilterLimits(this->y_car_limit_n_, this->y_car_limit_p_);
     // pass.filter(*cloud);
 
     // pass.setInputCloud(cloud);
