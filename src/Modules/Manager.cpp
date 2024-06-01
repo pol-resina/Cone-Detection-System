@@ -12,7 +12,7 @@ extern struct Params Config;
 bool clear_csv = false;
 
 
-Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config){
+Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config), compensator(Config){
   pubGround = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.ground, 20);
   pubClusters = nh.advertise<sensor_msgs::PointCloud2>(Config.common.topics.output.clusters, 20);
   pubObs = nh.advertise<as_msgs::ObservationArray>(Config.common.topics.output.observations, 20);
@@ -32,6 +32,7 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 
   pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
   sensor_msgs::PointCloud2 msg;
+  compensator.compensate(cloud);
   ransac.removeGround(cloud, msg, no_ground, pubPreRANSAC);
 
   // // save time ransac
@@ -145,6 +146,10 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   //   clear_csv = true;
   // }
   // this->saveTime("/home/pol/Desktop/timeelapsed.csv", elapsed);
+}
+
+void Manager::IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg){
+  // omplir buffer de imus
 }
 
 void Manager::limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg) {

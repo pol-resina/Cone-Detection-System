@@ -7,12 +7,15 @@
 #include "Modules/Config.hpp"
 #include "Modules/Ransac.hpp"
 #include "Modules/Clustering.hpp"
+#include "Modules/Compensator.hpp"
 #include "nav_msgs/Odometry.h"
 
 #include <geometry_msgs/Point.h>
 #include <tf/transform_datatypes.h>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
+
+#include <sensor_msgs/Imu.h>
 
 class Manager {
   private:
@@ -24,6 +27,7 @@ class Manager {
     
     Ransac ransac;
     Clustering clustering;
+    Compensator compensator;
 
     bool publish_debug_;
 
@@ -44,6 +48,7 @@ class Manager {
 
     // Callbacks
     void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);
+    void IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg);
     void limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg);
 };
 

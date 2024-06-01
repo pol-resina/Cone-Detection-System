@@ -13,6 +13,8 @@
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
 
+#include <sensor_msgs/Imu.h>
+
 Params Config;
 
 void import_params(ros::NodeHandle &nh);
@@ -26,16 +28,18 @@ int main(int argc, char** argv)
     Manager manager = Manager(nh);
 
 
-    message_filters::Subscriber<nav_msgs::Odometry> odom_sub(nh, "/limovelo/state", 10);
-    message_filters::Subscriber<sensor_msgs::PointCloud2> pcl_sub(nh, "/limovelo/full_pcl", 10);
+    // message_filters::Subscriber<nav_msgs::Odometry> odom_sub(nh, "/limovelo/state", 10);
+    // message_filters::Subscriber<sensor_msgs::PointCloud2> pcl_sub(nh, "/limovelo/full_pcl", 10);
 
-	typedef message_filters::sync_policies::ApproximateTime<nav_msgs::Odometry, sensor_msgs::PointCloud2> limoOut;
+	// typedef message_filters::sync_policies::ApproximateTime<nav_msgs::Odometry, sensor_msgs::PointCloud2> limoOut;
 
-	message_filters::Synchronizer<limoOut> syncPos(limoOut(100), odom_sub, pcl_sub);
-	syncPos.registerCallback(boost::bind(&Manager::limoveloCallback, &manager, _1, _2));
+	// message_filters::Synchronizer<limoOut> syncPos(limoOut(100), odom_sub, pcl_sub);
+	// syncPos.registerCallback(boost::bind(&Manager::limoveloCallback, &manager, _1, _2));
 
-    // ros::Subscriber subVelodyne = nh.subscribe(Config.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
-    ros::Subscriber subVelodyne = nh.subscribe("/AS/P/ftfcd/compensatedVelodyne", 1, &Manager::velodyneCallback, &manager);
+    // ros::Subscriber subVelodyne = nh.subscribe("/AS/P/ftfcd/compensatedVelodyne", 1, &Manager::velodyneCallback, &manager);
+    ros::Subscriber subVelodyne = nh.subscribe(Config.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
+
+    ros::Subscriber subIMU = nh.subscribe("/EL/Sensors/vectornav/IMU", 1, &Manager::IMUCallback, &manager);
 
     ros::spin(); 
 
