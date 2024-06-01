@@ -18,13 +18,14 @@ Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config){
   pubObs = nh.advertise<as_msgs::ObservationArray>(Config.common.topics.output.observations, 20);
   this->publish_debug_ = Config.manager.publish_debug;
   pubPreRANSAC = nh.advertise<sensor_msgs::PointCloud2>("/ftfcd/debug/preRANSAC", 20);
+  pubVelComp = nh.advertise<sensor_msgs::PointCloud2>("/AS/P/ftfcd/compensatedVelodyne", 20);
 }
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
-  if (cloud_msg == nullptr) return;
+  if (cloud_msg == nullptr || cloud_msg->data.empty()) return;
 
   auto start = std::chrono::high_resolution_clock::now(); // start timer
-  this->header_ = cloud_msg->header;
+  this->header1_ = cloud_msg->header;
 
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
   pcl::fromROSMsg(*cloud_msg, *cloud);
@@ -146,6 +147,56 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   // this->saveTime("/home/pol/Desktop/timeelapsed.csv", elapsed);
 }
 
+void Manager::limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg) {
+    if (pcl_msg == nullptr || pcl_msg->data.empty()) return;
+
+    this->header2_ = pcl_msg->header;
+
+    geometry_msgs::Point odom_position = odom_msg->pose.pose.position;
+    geometry_msgs::Quaternion odom_orientation = odom_msg->pose.pose.orientation;
+
+    // Convert the geometry_msgs::Quaternion to Eigen::Quaternionf
+    Eigen::Quaternionf quat(odom_orientation.w, odom_orientation.x, odom_orientation.y, odom_orientation.z);
+
+    // Convert Eigen::Quaternionf to Eigen::Matrix3f
+    Eigen::Matrix3f rotation_matrix = quat.toRotationMatrix();
+
+    // Calculate the inverse of the rotation matrix (transpose for orthogonal matrices)
+    Eigen::Matrix3f rotation_matrix_inv = rotation_matrix.transpose();
+
+    // Create the translation vector
+    Eigen::Vector3f translation_vector(odom_position.x, odom_position.y, odom_position.z);
+
+    // Calculate the inverse translation
+    Eigen::Vector3f translation_vector_inv = -rotation_matrix_inv * translation_vector;
+
+    // Convert ROS PointCloud2 to PCL PointCloud
+    pcl::PointCloud<pcl::PointXYZI> pcl_cloud;
+    pcl::fromROSMsg(*pcl_msg, pcl_cloud);
+
+    // Create an Eigen 4x4 transformation matrix for the inverse transformation
+    Eigen::Matrix4f transform = Eigen::Matrix4f::Identity();
+
+    // Set the inverse rotation part
+    transform.block<3,3>(0,0) = rotation_matrix_inv;
+
+    // Set the inverse translation part
+    transform.block<3,1>(0,3) = translation_vector_inv;
+
+    // Apply the inverse transformation to the point cloud
+    pcl::PointCloud<pcl::PointXYZI> transformed_cloud;
+    pcl::transformPointCloud(pcl_cloud, transformed_cloud, transform);
+
+    // Convert the transformed PCL point cloud back to ROS PointCloud2
+    sensor_msgs::PointCloud2 transformed_cloud_msg;
+    pcl::toROSMsg(transformed_cloud, transformed_cloud_msg);
+    transformed_cloud_msg.header = this->header2_; // Ensure the header is set correctly
+
+    // Publish the transformed point cloud
+    if (publish_debug_) {
+        this->publishCompensatedVelodyne(transformed_cloud_msg);
+    }
+}
 
 void Manager::publishClusters(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &clusters){
   sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
@@ -159,12 +210,18 @@ void Manager::publishClusters(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &clusters){
 
 void Manager::publishGround(sensor_msgs::PointCloud2 &msg){
   msg.header.frame_id = "velodyne";
-  msg.header.stamp = ros::Time::now();
+  msg.header.stamp = header1_.stamp;
   this->pubGround.publish(msg);
 }
 
+void Manager::publishCompensatedVelodyne(sensor_msgs::PointCloud2 &msg){
+  msg.header.frame_id = "velodyne";
+  msg.header.stamp = header2_.stamp;
+  this->pubVelComp.publish(msg);
+}
+
 void Manager::publishObservations(as_msgs::ObservationArray &obs_vector){
-  obs_vector.header = this->header_;
+  obs_vector.header = this->header1_;
   // obs_vector.header.stamp = ros::Time::now();
   this->pubObs.publish(obs_vector);
 }

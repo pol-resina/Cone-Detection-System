@@ -7,6 +7,12 @@
 #include <std_msgs/Float32.h>
 #include "Modules/Manager.hpp"
 
+#include "std_msgs/Int32.h"
+#include "std_msgs/Bool.h"
+#include <message_filters/subscriber.h>
+#include <message_filters/time_synchronizer.h>
+#include <message_filters/sync_policies/approximate_time.h>
+
 Params Config;
 
 void import_params(ros::NodeHandle &nh);
@@ -19,7 +25,17 @@ int main(int argc, char** argv)
     import_params(nh);
     Manager manager = Manager(nh);
 
-    ros::Subscriber subVelodyne = nh.subscribe(Config.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
+
+    message_filters::Subscriber<nav_msgs::Odometry> odom_sub(nh, "/limovelo/state", 10);
+    message_filters::Subscriber<sensor_msgs::PointCloud2> pcl_sub(nh, "/limovelo/full_pcl", 10);
+
+	typedef message_filters::sync_policies::ApproximateTime<nav_msgs::Odometry, sensor_msgs::PointCloud2> limoOut;
+
+	message_filters::Synchronizer<limoOut> syncPos(limoOut(100), odom_sub, pcl_sub);
+	syncPos.registerCallback(boost::bind(&Manager::limoveloCallback, &manager, _1, _2));
+
+    // ros::Subscriber subVelodyne = nh.subscribe(Config.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
+    ros::Subscriber subVelodyne = nh.subscribe("/AS/P/ftfcd/compensatedVelodyne", 1, &Manager::velodyneCallback, &manager);
 
     ros::spin(); 
 
