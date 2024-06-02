@@ -149,7 +149,8 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 }
 
 void Manager::IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg){
-  // omplir buffer de imus
+  IMU imu(imu_msg);
+  this->BUFFER_I.push(imu);
 }
 
 void Manager::limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg) {

@@ -8,6 +8,7 @@
 #include "Modules/Ransac.hpp"
 #include "Modules/Clustering.hpp"
 #include "Modules/Compensator.hpp"
+#include "../src/Objects/Buffer.cpp"
 #include "nav_msgs/Odometry.h"
 
 #include <geometry_msgs/Point.h>
@@ -45,6 +46,9 @@ class Manager {
   public:
     // Constructor
     Manager(ros::NodeHandle &nh);
+
+    // Buffer IMUs
+    Buffer<IMU> BUFFER_I;
 
     // Callbacks
     void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);

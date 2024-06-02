@@ -33,6 +33,7 @@ include_directories(
 
 add_executable(ftfcd
   include/Modules
+  include/Utils
 
   src/main.cpp
 
@@ -40,6 +41,8 @@ add_executable(ftfcd
   src/Modules/Ransac.cpp
   src/Modules/Clustering.cpp
   src/Modules/Compensator.cpp
+  src/Objects/Buffer.cpp
+  src/Objects/IMU.cpp
 )
 
 add_dependencies(${PROJECT_NAME} as_msgs_generate_messages_cpp)
