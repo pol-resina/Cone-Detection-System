@@ -39,3 +39,30 @@ ransac:
   dist_threshold: 0.1                         # distance threshold of the ransac algorithm   s'ha de quedar a 0.1 sino els cons perden massa punts
   plane_angle: 0.30                           # max angle of the plane 
   vis_outliers: false                         # visualize outliers
+
+state:
+  initial_gravity: [0.0, 0.0, 9.807]
+  I_Translation_L: [1.10, 0.0, 0.05] #[1.10, 0.0, 0.05]
+  I_Rotation_L: [
+      0.998,  0.0,  0.052,
+      0.0, 1.0,  0.0,
+      -0.052, 0.0, 0.998
+  ]
+
+point:
+  full_rotation_time: 0.1
+  offset_beginning: true     # (Xaloc's value, having a modified Velodyne LiDAR driver, is 'true') Is the offset with respect the beginning of the rotation (i.e. point.time ~ [0, 0.1]) or with respect the end (i.e. point.time ~ [-0.1, 0])? For more information see Issue #14: https://github.com/Huguet57/LIMO-Velo/issues/14
+
+accumulator:
+  real_time_delay: 0.1       # Should be at least [FULL_ROTATION_TIME] (without a modificated LiDAR driver)
+  imu_rate: 400
+  Initialization:
+    times: [0.5, 1.0, 1.25]
+    deltas: [0.1, 0.05, 0.02]
+  full_rotation_time: 0.1
+
+lidar:
+  LiDAR_type: velodyne
+  stamp_beginning: false     # (As usual, 'false') Is the pointcloud's stamp the last point's timestamp (end of rotation) or the first's (beggining of rotation)?
+  min_dist: 1.5
+  downsample_rate: 1         # Downsampling rate: results show that this one can be up to 32 and still work, try it if you need a speedup

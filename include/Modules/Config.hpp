@@ -1,6 +1,8 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
+#include "Utils/Common.hpp"
+
 #include <string>
 #include <vector>
 
@@ -54,6 +56,32 @@ struct Params{
     struct Manager {
         bool publish_debug;
     } manager;
+
+    struct State {
+        std::vector<float> initial_gravity;
+        std::vector<float> I_Rotation_L;
+        std::vector<float> I_Translation_L;
+    } state;
+
+    struct Point {
+        bool offset_beginning;
+        double full_rotation_time;
+    } point;
+
+    struct Accumulator {
+        double full_rotation_time;
+        double real_time_delay;
+        double imu_rate;
+        InitializationParams Initialization;
+        int MAX_POINTS2MATCH;
+    } accumulator;
+
+    struct Lidar {
+        int downsample_rate;
+        double min_dist;
+        std::string LiDAR_type;
+        bool stamp_beginning;
+    }lidar;
 };
 
 #endif

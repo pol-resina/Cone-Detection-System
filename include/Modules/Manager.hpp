@@ -8,7 +8,7 @@
 #include "Modules/Ransac.hpp"
 #include "Modules/Clustering.hpp"
 #include "Modules/Compensator.hpp"
-#include "../src/Objects/Buffer.cpp"
+#include "Modules/Accumulator.hpp"
 #include "nav_msgs/Odometry.h"
 
 #include <geometry_msgs/Point.h>
@@ -29,6 +29,8 @@ class Manager {
     Ransac ransac;
     Clustering clustering;
     Compensator compensator;
+    // Accumulator& accumulator = Accumulator::getInstance();
+    Accumulator *accumulator;
 
     bool publish_debug_;
 
@@ -46,9 +48,6 @@ class Manager {
   public:
     // Constructor
     Manager(ros::NodeHandle &nh);
-
-    // Buffer IMUs
-    Buffer<IMU> BUFFER_I;
 
     // Callbacks
     void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);

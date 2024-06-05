@@ -19,6 +19,8 @@ Manager::Manager(ros::NodeHandle &nh): ransac(Config), clustering(Config), compe
   this->publish_debug_ = Config.manager.publish_debug;
   pubPreRANSAC = nh.advertise<sensor_msgs::PointCloud2>("/ftfcd/debug/preRANSAC", 20);
   pubVelComp = nh.advertise<sensor_msgs::PointCloud2>("/AS/P/ftfcd/compensatedVelodyne", 20);
+
+  this->accumulator = &Accumulator::getInstance();
 }
 
 void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_msg) {
@@ -26,6 +28,8 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 
   auto start = std::chrono::high_resolution_clock::now(); // start timer
   this->header1_ = cloud_msg->header;
+
+
 
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
   pcl::fromROSMsg(*cloud_msg, *cloud);
@@ -149,8 +153,9 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 }
 
 void Manager::IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg){
-  IMU imu(imu_msg);
-  this->BUFFER_I.push(imu);
+  // IMU imu(imu_msg);
+  // this->BUFFER_I.push(imu);
+  accumulator->receive_imu(imu_msg);
 }
 
 void Manager::limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg) {

@@ -80,6 +80,29 @@ void import_params(ros::NodeHandle &nh){
     nh.param<double>("dbscan/classification/distX", Config.dbscan.classification.distX, 0.5);
     nh.param<double>("dbscan/classification/distY", Config.dbscan.classification.distY, 0.5);
     nh.param<double>("dbscan/classification/distZ", Config.dbscan.classification.distZ, 1);
+
+    // COMPENSATOR
+    // State
+    nh.param<std::vector<float>>("initial_gravity", Config.state.initial_gravity, {0.0, 0.0, -9.807});
+    nh.param<std::vector<float>>("I_Translation_L", Config.state.I_Translation_L, std::vector<float> (3, 0.));
+    nh.param<std::vector<float>>("I_Rotation_L", Config.state.I_Rotation_L, std::vector<float> (9, 0.));
+    // Point
+    nh.param<bool>("offset_beginning", Config.point.offset_beginning, false);
+    nh.param<double>("full_rotation_time", Config.point.full_rotation_time, 0.1);
+
+    // ACCUMULATOR
+    nh.param<double>("accumulator/real_time_delay", Config.accumulator.real_time_delay, 1.);
+    nh.param<double>("accumulator/imu_rate", Config.accumulator.imu_rate, 400);
+    nh.param<double>("accumulator/full_rotation_time", Config.accumulator.full_rotation_time, 0.1);
+    nh.param<std::vector<double>>("accumulator/Initialization/times", Config.accumulator.Initialization.times, {});
+    nh.param<std::vector<double>>("accumulator/Initialization/deltas", Config.accumulator.Initialization.deltas, {Config.accumulator.full_rotation_time});
+    nh.param<int>("MAX_POINTS2MATCH", Config.accumulator.MAX_POINTS2MATCH, 10);
+
+    // Lidar
+    nh.param<int>("lidar/downsample_rate", Config.lidar.downsample_rate, 4);
+    nh.param<bool>("lidar/stamp_beginning", Config.lidar.stamp_beginning, false);
+    nh.param<std::string>("lidar/LiDAR_type", Config.lidar.LiDAR_type, "unknown");
+    nh.param<double>("lidar/min_dist", Config.lidar.min_dist, 3.);
 }
 
 
