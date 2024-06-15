@@ -1,21 +1,19 @@
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
+#include "Objects/Buffer.hpp"
 // #include "Headers/Common.hpp"
 // #include "Headers/Utils.hpp"
-#include "Utils/Objects.hpp"
 // #include "Headers/Publishers.hpp"
 // #include "Headers/PointClouds.hpp"
 // #include "Headers/Accumulator.hpp"
 // #include "Headers/Compensator.hpp"
 // #include "Headers/Localizator.hpp"
 // #include "Headers/Mapper.hpp"
-#include "Modules/Config.hpp"
 
-#endif
 
-// extern struct Params Config;
+extern struct Params Config;
 
 template class Buffer<IMU>;
+template class Buffer<Point>;
+template class Buffer<State>;
 
 // class Buffer {
     // public:

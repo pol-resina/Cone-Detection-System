@@ -1,7 +1,4 @@
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
-#include "Utils/Common.hpp"
-#include "Utils/Objects.hpp"
+#include "Objects/RotTransl.hpp"
 // #include "Headers/Utils.hpp"
 // #include "Headers/Publishers.hpp"
 // #include "Headers/PointClouds.hpp"
@@ -9,17 +6,16 @@
 // #include "Headers/Compensator.hpp"
 // #include "Headers/Localizator.hpp"
 // #include "Headers/Mapper.hpp"
-#endif
 
 extern struct Params Config;
 
 // class RotTransl {
     // public:
 
-        RotTransl::RotTransl(const State& S) {
-            this->R = S.R;
-            this->t = S.pos;
-        }
+        // RotTransl::RotTransl(const State& S) {
+        //     this->R = S.R;
+        //     this->t = S.pos;
+        // }
 
         RotTransl::RotTransl(const Eigen::Matrix3f& dR, const Eigen::Vector3f& dt) {
             this->R = dR;

@@ -34,21 +34,22 @@ include_directories(
 add_executable(ftfcd
   include/Modules
   include/Utils
+  include/Objects
 
   src/main.cpp
 
-  src/Modules/Manager.cpp
-  src/Modules/Ransac.cpp
+  src/Modules/Accumulator.cpp
   src/Modules/Clustering.cpp
   src/Modules/Compensator.cpp
-  src/Modules/Accumulator.cpp
+  src/Modules/Manager.cpp
+  src/Modules/Ransac.cpp
+  src/Modules/PointCloudProcessor.cpp
   src/Objects/Buffer.cpp
   src/Objects/IMU.cpp
-  src/Objects/State.cpp
   src/Objects/Point.cpp
   src/Objects/RotTransl.cpp
+  src/Objects/State.cpp
   src/Utils/Utils.cpp
-  src/Utils/PointCloudProcessor.cpp
 )
 
 add_dependencies(${PROJECT_NAME} as_msgs_generate_messages_cpp)

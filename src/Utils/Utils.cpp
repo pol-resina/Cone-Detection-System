@@ -1,15 +1,4 @@
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
-#include "Utils/Common.hpp"
 #include "Utils/Utils.hpp"
-#include "Utils/Objects.hpp"
-// #include "Headers/Publishers.hpp"
-// #include "Headers/PointClouds.hpp"
-// #include "Headers/Accumulator.hpp"
-// #include "Headers/Compensator.hpp"
-// #include "Headers/Localizator.hpp"
-// #include "Headers/Mapper.hpp"
-#endif
 
 std::uint64_t Conversions::sec2Microsec(double t) {
     return std::round(t*1e6);

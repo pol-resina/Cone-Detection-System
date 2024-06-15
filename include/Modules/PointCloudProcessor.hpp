@@ -1,3 +1,12 @@
+#ifndef POINTCLOUDPROCESSOR_HPP
+#define POINTCLOUDPROCESSOR_HPP
+
+// #include "Utils/Common.hpp"
+// #include "Modules/Config.hpp"
+// #include "Utils/Utils.hpp"
+
+#include "Objects/Point.hpp"
+
 class PointCloudProcessor {
     
     // Given a PointCloud, process it to push to the buffer
@@ -30,3 +39,5 @@ class PointCloudProcessor {
         Points temporal_downsample(const Points&);
         static bool time_sort(const Point&, const Point&);
 };
+
+#endif

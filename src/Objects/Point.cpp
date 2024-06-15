@@ -1,16 +1,10 @@
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
-#include "Utils/Common.hpp"
-#include "Utils/Objects.hpp"
-#include "Modules/Config.hpp"
-#include "Utils/Utils.hpp"
+#include "Objects/Point.hpp"
 // #include "Headers/Publishers.hpp"
 // #include "Headers/PointClouds.hpp"
 // #include "Headers/Accumulator.hpp"
 // #include "Headers/Compensator.hpp"
 // #include "Headers/Localizator.hpp"
 // #include "Headers/Mapper.hpp"
-#endif
 
 extern struct Params Config;
 
@@ -136,12 +130,12 @@ extern struct Params Config;
         }
 
         Point operator*(const Eigen::Matrix<float, 3, 3>& R, const Point& p) {
-            Eigen::Matrix<float, 3, 1> moved_p = R*(p.toEigen());
+            Eigen::Matrix<float, 3, 1> moved_p = (R*p).toEigen();
             return Point(moved_p, p);
         }
 
         Point operator+(const Point& p, const Eigen::Matrix<float, 3, 1> v) {
-            Eigen::Matrix<float, 3, 1> moved_p = p.toEigen() + v;
+            Eigen::Matrix<float, 3, 1> moved_p = (p+v).toEigen();
             return Point(moved_p, p);
         }
 

@@ -1,16 +1,10 @@
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
-#include "Utils/Common.hpp"
-#include "Utils/Objects.hpp"
-#include "Modules/Config.hpp"
-#include "Utils/Utils.hpp"
-#include "Modules/Accumulator.hpp"
+#include "Objects/State.hpp"
+// #include "Modules/Accumulator.hpp"
 // #include "Headers/Publishers.hpp"
 // #include "Headers/PointClouds.hpp"
 // #include "Headers/Compensator.hpp"
 // #include "Headers/Localizator.hpp"
 // #include "Headers/Mapper.hpp"
-#endif
 
 extern struct Params Config;
 
@@ -39,15 +33,15 @@ extern struct Params Config;
             this->nba = Eigen::Vector3f::Zero();
         }
 
-        State::State(double time) : State::State() {
-            // Set time
-            this->time = time;
+        // State::State(double time) : State::State() {         // --> not sure if it will be used
+        //     // Set time
+        //     this->time = time;
             
-            // Get time
-            IMU imu = Accumulator::getInstance().get_next_imu(time);
-            this->a = imu.a;
-            this->w = imu.w;
-        }
+        //     // Get time
+        //     IMU imu = Accumulator::getInstance().get_next_imu(time);
+        //     this->a = imu.a;
+        //     this->w = imu.w;
+        // }
 
         // State::State(const state_ikfom& s, double time) : State::State (time) {
         //     // Export data from IKFoM state
@@ -70,7 +64,7 @@ extern struct Params Config;
         }
 
         RotTransl State::inv() const {
-            return RotTransl(*this).inv();
+            return RotTransl(this->R, this->pos).inv();
         }
 
         void State::operator+= (const IMU& imu) {
@@ -78,15 +72,15 @@ extern struct Params Config;
         }
 
         Point operator* (const State& X, const Point& p) {
-            return RotTransl(X) * p;
+            return RotTransl(X.R, X.pos) * p;
         }
 
         RotTransl operator* (const State& X, const RotTransl& RT) {
-            return RotTransl(X) * RT;
+            return RotTransl(X.R, X.pos) * RT;
         }
 
         Points operator* (const State& X, const Points& points) {
-            return RotTransl(X) * points;
+            return RotTransl(X.R, X.pos) * points;
         }
 
     // private:

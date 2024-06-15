@@ -1,16 +1,4 @@
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
-#include "Utils/Common.hpp"
-#include "Utils/Utils.hpp"
-#include "Utils/Objects.hpp"
-#include "Modules/Config.hpp"
-#include "Modules/PointClouds.hpp"
-// #include "Headers/Publishers.hpp"
-// #include "Headers/Accumulator.hpp"
-// #include "Headers/Compensator.hpp"
-// #include "Headers/Localizator.hpp"
-// #include "Headers/Mapper.hpp"
-#endif
+#include "Modules/PointCloudProcessor.hpp"
 
 extern struct Params Config;
 

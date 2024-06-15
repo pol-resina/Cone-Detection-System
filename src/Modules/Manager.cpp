@@ -233,6 +233,7 @@ void Manager::publishCompensatedVelodyne(sensor_msgs::PointCloud2 &msg){
 
 void Manager::publishObservations(as_msgs::ObservationArray &obs_vector){
   obs_vector.header = this->header1_;
+  if(obs_vector.observations.empty()) return;
   // obs_vector.header.stamp = ros::Time::now();
   this->pubObs.publish(obs_vector);
 }

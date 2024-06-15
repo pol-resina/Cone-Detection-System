@@ -1,7 +1,4 @@
-#ifndef __OBJECTS_H__
-#define __OBJECTS_H__
-#include "Utils/Common.hpp"
-#include "Utils/Objects.hpp"
+#include "Objects/IMU.hpp"
 // #include "Headers/Utils.hpp"
 // #include "Headers/Publishers.hpp"
 // #include "Headers/PointClouds.hpp"
@@ -9,9 +6,8 @@
 // #include "Headers/Compensator.hpp"
 // #include "Headers/Localizator.hpp"
 // #include "Headers/Mapper.hpp"
-#endif
 
-// extern struct Params Config;
+extern struct Params Config;
 
 // class IMU {
     // public:

@@ -1,3 +1,14 @@
+#ifndef UTILS_HPP
+#define UTILS_HPP
+
+#include "Utils/Common.hpp"
+#include "Objects/Point.hpp"
+#include "Objects/IMU.hpp"
+#include "Objects/State.hpp"
+
+#include <deque>
+#include <vector>
+
 namespace Conversions {
     std::uint64_t sec2Microsec(double t);
     double microsec2Sec(std::uint64_t t);
@@ -26,7 +37,6 @@ namespace Algorithms {
 #define SKEW_SYM_MATRX(v) 0.0,-v[2],v[1],v[2],0.0,-v[0],-v[1],v[0],0.0
 
 namespace SO3Math {
-
     template<typename T, typename Ts>
     Eigen::Matrix<T, 3, 3> Exp(Eigen::Matrix<T, 3, 1> ang_vel, Ts dt)
     {
@@ -50,7 +60,6 @@ namespace SO3Math {
             return Eye3;
         }
     }
-
 }
 
 namespace R3Math {
@@ -86,3 +95,5 @@ public:
 };
 
 typedef Timer<std::chrono::microseconds, std::chrono::steady_clock> MicroTimer;
+
+#endif

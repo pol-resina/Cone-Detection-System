@@ -1,14 +1,12 @@
-#ifndef __ACCUMULATOR_HPP__
-#define __ACCUMULATOR_HPP__
-#include "Utils/Common.hpp"
-#include "Utils/Utils.hpp"
-#include "Utils/Objects.hpp"
-#include "Modules/Config.hpp"
-#include "Modules/PointClouds.hpp"
-// #include "Headers/Publishers.hpp"
-// #include "Headers/Compensator.hpp"
-// #include "Headers/Localizator.hpp"
-// #include "Headers/Mapper.hpp"
+#ifndef ACCUMULATOR_HPP
+#define ACCUMULATOR_HPP
+
+#include "Modules/PointCloudProcessor.hpp"
+#include "Objects/Buffer.hpp"
+#include "Objects/State.hpp"
+#include "Objects/Point.hpp"
+#include "Objects/IMU.hpp"
+
 
 extern struct Params Config;
 
