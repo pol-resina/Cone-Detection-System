@@ -97,12 +97,15 @@ void import_params(ros::NodeHandle &nh){
     nh.param<std::vector<double>>("accumulator/Initialization/times", Config.accumulator.Initialization.times, {});
     nh.param<std::vector<double>>("accumulator/Initialization/deltas", Config.accumulator.Initialization.deltas, {Config.accumulator.full_rotation_time});
     nh.param<int>("MAX_POINTS2MATCH", Config.accumulator.MAX_POINTS2MATCH, 10);
+    nh.param<bool>("accumulator/real_time", Config.accumulator.real_time, true);
 
     // Lidar
     nh.param<int>("lidar/downsample_rate", Config.lidar.downsample_rate, 4);
     nh.param<bool>("lidar/stamp_beginning", Config.lidar.stamp_beginning, false);
     nh.param<std::string>("lidar/LiDAR_type", Config.lidar.LiDAR_type, "unknown");
     nh.param<double>("lidar/min_dist", Config.lidar.min_dist, 3.);
+    nh.param<double>("lidar/empty_lidar_time", Config.lidar.empty_lidar_time, 20.);
+    nh.param<float>("lidar/downsample_prec", Config.lidar.downsample_prec, 0.2);
 }
 
 

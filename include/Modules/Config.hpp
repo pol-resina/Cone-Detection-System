@@ -74,6 +74,7 @@ struct Params{
         double imu_rate;
         InitializationParams Initialization;
         int MAX_POINTS2MATCH;
+        bool real_time;
     } accumulator;
 
     struct Lidar {
@@ -81,6 +82,8 @@ struct Params{
         double min_dist;
         std::string LiDAR_type;
         bool stamp_beginning;
+        double empty_lidar_time;
+        float downsample_prec;
     }lidar;
 };
 

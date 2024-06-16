@@ -9,6 +9,16 @@ extern struct Params Config;
             return this->temporal_downsample(points);
         }
 
+        void PointCloudProcessor::fill(pcl::PointCloud<full_info::Point>& pcl, const Points& points) {
+            // To then set to max of points
+            pcl.header.stamp = 0;
+
+            for (Point p : points) {
+                pcl.points.push_back(p.toPCL());
+                pcl.header.stamp = std::max(pcl.header.stamp, Conversions::sec2Microsec(p.time));
+            }
+        }
+
     // private:
         Points PointCloudProcessor::msg2points(const PointCloud_msg& msg) {
             if (Config.lidar.LiDAR_type == LIDAR_TYPE::Velodyne) return this->velodynemsg2points(msg);
@@ -110,13 +120,3 @@ extern struct Params Config;
             std::sort(sorted_points.begin(), sorted_points.end(), this->time_sort);
             return sorted_points;
         }
-
-// void Processor::fill(pcl::PointCloud<full_info::Point>& pcl, const Points& points) {
-//     // To then set to max of points
-//     pcl.header.stamp = 0;
-
-//     for (Point p : points) {
-//         pcl.points.push_back(p.toPCL());
-//         pcl.header.stamp = std::max(pcl.header.stamp, Conversions::sec2Microsec(p.time));
-//     }
-// }

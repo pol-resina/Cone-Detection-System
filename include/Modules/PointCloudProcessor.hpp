@@ -16,6 +16,7 @@ class PointCloudProcessor {
         Points msg2points(const PointCloud_msg&);
         Points downsample(const Points&);
         Points sort_points(const Points&);
+        void fill(pcl::PointCloud<full_info::Point>& pcl, const Points& points);
 
     private:
         // Velodyne specific

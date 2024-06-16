@@ -9,6 +9,16 @@
 #include "Modules/Clustering.hpp"
 #include "Modules/Compensator.hpp"
 #include "Modules/Accumulator.hpp"
+
+#include "Utils/Utils.hpp"
+#include "Utils/Common.hpp"
+
+#include "Objects/Buffer.hpp"
+#include "Objects/IMU.hpp"
+#include "Objects/Point.hpp"
+#include "Objects/RotTransl.hpp"
+#include "Objects/State.hpp"
+
 #include "nav_msgs/Odometry.h"
 
 #include <geometry_msgs/Point.h>
@@ -28,11 +38,12 @@ class Manager {
     
     Ransac ransac;
     Clustering clustering;
-    Compensator compensator;
+    Compensator compensator = Compensator ();
     // Accumulator& accumulator = Accumulator::getInstance();
     Accumulator *accumulator;
 
     bool publish_debug_;
+    double last_time_updated = -1;
 
     std_msgs::Header header1_, header2_;
 
