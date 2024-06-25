@@ -41,40 +41,35 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   // (Delta = t2 - t1) Size of the field of view we use to localize
   double delta = Config.accumulator.Initialization.deltas.front();
 
-  // The accumulator received enough data to start
-  while (accumulator->ready()) {
-    // Step 0. TIME MANAGEMENT
-    // Define time interval [t1, t2] which we will use to localize ourselves
-        
-        // Real-time, define t2 as the latest time
-        if (Config.accumulator.real_time) t2 = accumulator->latest_time();
-        // Not real time, define t2 as prev_t2 + delta, but don't go into the future
-        else t2 = std::min(t2 + delta, accumulator->latest_time());
-        
-        // Update delta value
-        delta = accumulator->update_delta(Config.accumulator.Initialization, t2);
+  if (!accumulator->ready()) return;
+  // Step 0. TIME MANAGEMENT
+  // Define time interval [t1, t2] which we will use to localize ourselves
+      
+    // Real-time, define t2 as the latest time
+    if (Config.accumulator.real_time) t2 = accumulator->latest_time();
+    // Not real time, define t2 as prev_t2 + delta, but don't go into the future
+    else t2 = std::min(t2 + delta, accumulator->latest_time());
+    
+    // Update delta value
+    delta = accumulator->update_delta(Config.accumulator.Initialization, t2);
 
-        // Define t1 but don't use to localize repeated points
-        t1 = std::max(t2 - delta, last_time_updated);
-        // Check if interval has enough field of view
-        if (t2 - t1 < delta - 1e-6) break;
+    // Define t1 but don't use to localize repeated points
+    t1 = std::max(t2 - delta, last_time_updated);
+    // Check if interval has enough field of view
+    if (t2 - t1 < delta - 1e-6) return;
 
-    // Step 1. LOCALIZATION
+  // Step 1. LOCALIZATION
 
-        // Compensated pointcloud given a path
-        Points compensated = compensator.compensate(t1, t2);
-        Points ds_compensated = compensator.downsample(compensated);
-        // cloud = compensator.downsample_PCL(compensated);     // a try of returning directly PCL
-        // if (ds_compensated.size() < Config.MAX_POINTS2MATCH) break; // in limo, don't know if its necessary
+    // Compensated pointcloud given a path
+    Points compensated = compensator.compensate(t1, t2);
+    Points ds_compensated = compensator.downsample(compensated);
+    // cloud = compensator.downsample_PCL(compensated);     // a try of returning directly PCL
+    // if (ds_compensated.size() < Config.MAX_POINTS2MATCH) break; // in limo, don't know if its necessary
 
-        last_time_updated = t2;
+    last_time_updated = t2;
 
-    // Empty too old LiDAR points & IMUs
-    accumulator->clear_buffers(t2 - Config.lidar.empty_lidar_time);
-
-    // Trick to call break in the middle of the program
-    break;
-  }
+  // Empty too old LiDAR points & IMUs
+  accumulator->clear_buffers(t2 - Config.lidar.empty_lidar_time);
 
   // pcl::fromROSMsg(*cloud_msg, *cloud);   // --> need change
 
