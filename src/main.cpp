@@ -40,6 +40,7 @@ int main(int argc, char** argv)
     ros::Subscriber subVelodyne = nh.subscribe(Config.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
 
     ros::Subscriber subIMU = nh.subscribe("/EL/Sensors/vectornav/IMU", 1, &Manager::IMUCallback, &manager);
+    ros::Subscriber subState = nh.subscribe("/AS/P/GraphSlam1/carPosition", 1, &Manager::IMUCallback, &manager);
 
     ros::spin(); 
 

@@ -41,6 +41,13 @@
                 this->add(imu);
             }
 
+            void Accumulator::receive_state(const state_msg& msg) {
+                // Turn message to state object
+                State state(msg);
+                // Add it to the state buffer
+                this->add(state);
+            }
+
         // Empty buffers
             void Accumulator::clear_buffers() {
                 this->BUFFER_L.clear();
@@ -67,6 +74,7 @@
         }
 
         States Accumulator::get_states(double t1, double t2) {
+            std::cout << "size: " << BUFFER_X.size() << std::endl;
             return this->get(this->BUFFER_X, t1, t2);
         }
 
@@ -101,7 +109,7 @@
         }
 
         double Accumulator::update_delta(const InitializationParams& initialization, double t) {
-            assert(("There has to be exactly one more delta value than time delimiters", initialization.times.size() + 1 == initialization.deltas.size()));
+            // assert(("There has to be exactly one more delta value than time delimiters", initialization.times.size() + 1 == initialization.deltas.size()));
             return this->interpret_initialization(initialization, t);
         }
 

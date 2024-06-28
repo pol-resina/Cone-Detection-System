@@ -9,6 +9,8 @@
 #include "Objects/Point.hpp"
 #include "Objects/IMU.hpp"
 
+#include <geometry_msgs/PoseStamped.h>
+
 // #include "Modules/Accumulator.hpp"
 
 // #include <deque>
@@ -41,6 +43,7 @@ class State {
         Eigen::Vector3f nba;
 
         State();
+        State(const state_msg& msg);
         State(double time);
         // State(const state_ikfom& s, double time);            state ikFoM, no cal, es part del kalman
 

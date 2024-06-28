@@ -16,6 +16,7 @@
 #include <std_msgs/Bool.h>
 #include <geometry_msgs/PoseArray.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
 // PCL Library
 #define PCL_NO_PRECOMPILE
 #include <pcl_conversions/pcl_conversions.h>
@@ -151,6 +152,7 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(custom::Point,
 
 typedef sensor_msgs::PointCloud2::ConstPtr PointCloud_msg;
 typedef sensor_msgs::Imu::ConstPtr IMU_msg;
+typedef geometry_msgs::PoseStamped::ConstPtr state_msg;
 typedef double TimeType;
 
 class Point;

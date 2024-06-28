@@ -28,6 +28,7 @@ class Accumulator {
         // Receive from topics
             void receive_lidar(const PointCloud_msg&);
             void receive_imu(const IMU_msg&);
+            void receive_state(const state_msg&);
         
         // Empty buffers
             void clear_buffers();

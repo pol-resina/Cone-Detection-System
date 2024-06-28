@@ -27,6 +27,7 @@
 #include <Eigen/Geometry>
 
 #include <sensor_msgs/Imu.h>
+#include <geometry_msgs/PoseStamped.h>
 
 class Manager {
   private:
@@ -63,6 +64,7 @@ class Manager {
     // Callbacks
     void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);
     void IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg);
+    void stateCallback(const geometry_msgs::PoseStamped::ConstPtr& state_msg);
     void limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg);
 };
 

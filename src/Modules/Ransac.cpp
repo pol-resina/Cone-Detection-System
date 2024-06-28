@@ -89,6 +89,7 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
 
     sensor_msgs::PointCloud2::Ptr output(new sensor_msgs::PointCloud2);
     pcl::toROSMsg(*preprocCloud,*output);
+    output->header.frame_id = "velodyne";
     pubPreRANSAC.publish(output);
 
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);

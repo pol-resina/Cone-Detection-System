@@ -49,9 +49,11 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     if (Config.accumulator.real_time) t2 = accumulator->latest_time();
     // Not real time, define t2 as prev_t2 + delta, but don't go into the future
     else t2 = std::min(t2 + delta, accumulator->latest_time());
+  std::cout << "min" << std::endl;
     
     // Update delta value
     delta = accumulator->update_delta(Config.accumulator.Initialization, t2);
+  std::cout << "update" << std::endl;
 
     // Define t1 but don't use to localize repeated points
     t1 = std::max(t2 - delta, last_time_updated);
@@ -59,10 +61,13 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     if (t2 - t1 < delta - 1e-6) return;
 
   // Step 1. LOCALIZATION
+    std::cout << "step 1" << std::endl;
 
     // Compensated pointcloud given a path
     Points compensated = compensator.compensate(t1, t2);
+      std::cout << "comp 1" << std::endl;
     Points ds_compensated = compensator.downsample(compensated);
+  std::cout << "comp    2" << std::endl;
     // cloud = compensator.downsample_PCL(compensated);     // a try of returning directly PCL
     // if (ds_compensated.size() < Config.MAX_POINTS2MATCH) break; // in limo, don't know if its necessary
 
@@ -70,8 +75,23 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 
   // Empty too old LiDAR points & IMUs
   accumulator->clear_buffers(t2 - Config.lidar.empty_lidar_time);
+  std::cout << "clear buffers" << std::endl;
 
   // pcl::fromROSMsg(*cloud_msg, *cloud);   // --> need change
+  for (const auto& point : ds_compensated) {
+      pcl::PointXYZI pcl_point;
+      pcl_point.x = point.x;
+      pcl_point.y = point.y;
+      pcl_point.z = point.z;
+      pcl_point.intensity = point.intensity;
+
+      cloud->points.push_back(pcl_point);
+  }
+  std::cout << "to PCL" << std::endl;
+
+  cloud->width = cloud->points.size();
+  cloud->height = 1; // Unorganized point cloud
+  // cloud->  is_dense = false; // Change as necessary
 
   pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
   sensor_msgs::PointCloud2 msg;
@@ -194,6 +214,10 @@ void Manager::IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg){
   // IMU imu(imu_msg);
   // this->BUFFER_I.push(imu);
   accumulator->receive_imu(imu_msg);
+}
+
+void Manager::stateCallback(const geometry_msgs::PoseStamped::ConstPtr& state_msg){
+  accumulator->receive_state(state_msg);
 }
 
 void Manager::limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg) {

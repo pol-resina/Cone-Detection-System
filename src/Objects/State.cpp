@@ -33,6 +33,32 @@ extern struct Params Config;
             this->nba = Eigen::Vector3f::Zero();
         }
 
+        // with position
+        State::State(const state_msg& msg) {
+            // Read YAML parameters
+            this->g = Eigen::Map<Eigen::Vector3f>(Config.state.initial_gravity.data(), 3);
+            this->tLI = Eigen::Map<Eigen::Vector3f>(Config.state.I_Translation_L.data(), 3);
+            this->RLI = Eigen::Map<Eigen::Matrix3f>(Config.state.I_Rotation_L.data(), 3, 3).transpose();
+
+            // State
+            this->pos(0) = msg->pose.position.x;
+            this->pos(1) = msg->pose.position.y;
+            this->pos(2) = atan2(2*(msg->pose.orientation.w*msg->pose.orientation.z + msg->pose.orientation.x*msg->pose.orientation.y), \
+                                 1 - 2*(msg->pose.orientation.y*msg->pose.orientation.y + msg->pose.orientation.z*msg->pose.orientation.z));
+            this->R = Eigen::Matrix3f::Identity();
+            this->vel = Eigen::Vector3f::Zero();
+
+            // Biases
+            this->bw = Eigen::Vector3f::Zero();
+            this->ba = Eigen::Vector3f::Zero();
+
+            // Noise
+            this->nw = Eigen::Vector3f::Zero();
+            this->na = Eigen::Vector3f::Zero();
+            this->nbw = Eigen::Vector3f::Zero();
+            this->nba = Eigen::Vector3f::Zero();
+        }
+
         // State::State(double time) : State::State() {         // --> not sure if it will be used
         //     // Set time
         //     this->time = time;
