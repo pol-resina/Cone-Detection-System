@@ -152,7 +152,7 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(custom::Point,
 
 typedef sensor_msgs::PointCloud2::ConstPtr PointCloud_msg;
 typedef sensor_msgs::Imu::ConstPtr IMU_msg;
-typedef geometry_msgs::PoseStamped::ConstPtr state_msg;
+typedef nav_msgs::Odometry::ConstPtr state_msg;
 typedef double TimeType;
 
 class Point;

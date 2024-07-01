@@ -48,6 +48,8 @@ state:
       0.0, 1.0,  0.0,
       -0.052, 0.0, 0.998
   ]
+  covariance_bias_gyroscope: 1.54e-5
+  covariance_bias_acceleration: 3.38e-4
 
 point:
   full_rotation_time: 0.1

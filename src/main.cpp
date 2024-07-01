@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     ros::Subscriber subVelodyne = nh.subscribe(Config.common.topics.input.points, 1, &Manager::velodyneCallback, &manager);
 
     ros::Subscriber subIMU = nh.subscribe("/EL/Sensors/vectornav/IMU", 1, &Manager::IMUCallback, &manager);
-    ros::Subscriber subState = nh.subscribe("/AS/P/GraphSlam1/carPosition", 1, &Manager::IMUCallback, &manager);
+    ros::Subscriber subState = nh.subscribe("/AS/P/GraphSlam1/carPosition", 1, &Manager::stateCallback, &manager);
 
     ros::spin(); 
 
@@ -84,9 +84,11 @@ void import_params(ros::NodeHandle &nh){
 
     // COMPENSATOR
     // State
-    nh.param<std::vector<float>>("initial_gravity", Config.state.initial_gravity, {0.0, 0.0, -9.807});
-    nh.param<std::vector<float>>("I_Translation_L", Config.state.I_Translation_L, std::vector<float> (3, 0.));
-    nh.param<std::vector<float>>("I_Rotation_L", Config.state.I_Rotation_L, std::vector<float> (9, 0.));
+    nh.param<std::vector<float>>("state/initial_gravity", Config.state.initial_gravity, {0.0, 0.0, -9.807});
+    nh.param<std::vector<float>>("state/I_Translation_L", Config.state.I_Translation_L, std::vector<float> (3, 0.));
+    nh.param<std::vector<float>>("state/I_Rotation_L", Config.state.I_Rotation_L, std::vector<float> (9, 0.));
+    nh.param<double>("state/covariance_bias_gyroscope", Config.state.covariance_bias_gyroscope, 1.54e-5);
+    nh.param<double>("state/covariance_bias_acceleration", Config.state.covariance_bias_acceleration, 3.38e-4);
     // Point
     nh.param<bool>("offset_beginning", Config.point.offset_beginning, false);
     nh.param<double>("full_rotation_time", Config.point.full_rotation_time, 0.1);

@@ -61,6 +61,8 @@ struct Params{
         std::vector<float> initial_gravity;
         std::vector<float> I_Rotation_L;
         std::vector<float> I_Translation_L;
+        double covariance_bias_gyroscope;
+        double covariance_bias_acceleration;
     } state;
 
     struct Point {

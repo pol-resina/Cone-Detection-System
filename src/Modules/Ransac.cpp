@@ -42,15 +42,16 @@ void Ransac::removeGround(pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud, sensor_ms
     pass.setFilterLimits(0, this->max_x_);
     pass.filter(*cloud);
 
-    pass.setInputCloud(cloud);
-    pass.setFilterFieldName("y");
-    pass.setFilterLimits(this->min_y_, this->max_y_);
-    pass.filter(*cloud);
+    // pass.setInputCloud(cloud);
+    // pass.setFilterFieldName("y");
+    // pass.setFilterLimits(this->min_y_, this->max_y_);
+    // pass.filter(*cloud);
 
     pass.setInputCloud(cloud);
     pass.setFilterFieldName("z");
     pass.setFilterLimits(this->minz_, this->maxz_);
     pass.filter(*preprocCloud);
+    std::cout << "preprocCloud size: " << preprocCloud->points.size() << std::endl;
 
     pcl::copyPointCloud(*preprocCloud, *inputCloud);
     int index = 0;

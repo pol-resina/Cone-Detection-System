@@ -38,19 +38,31 @@ extern struct Params Config;
             // Read YAML parameters
             this->g = Eigen::Map<Eigen::Vector3f>(Config.state.initial_gravity.data(), 3);
             this->tLI = Eigen::Map<Eigen::Vector3f>(Config.state.I_Translation_L.data(), 3);
+            // this->tLI = Eigen::Vector3f(Config.state.I_Translation_L.data()).cast<double>();
             this->RLI = Eigen::Map<Eigen::Matrix3f>(Config.state.I_Rotation_L.data(), 3, 3).transpose();
 
             // State
-            this->pos(0) = msg->pose.position.x;
-            this->pos(1) = msg->pose.position.y;
-            this->pos(2) = atan2(2*(msg->pose.orientation.w*msg->pose.orientation.z + msg->pose.orientation.x*msg->pose.orientation.y), \
-                                 1 - 2*(msg->pose.orientation.y*msg->pose.orientation.y + msg->pose.orientation.z*msg->pose.orientation.z));
-            this->R = Eigen::Matrix3f::Identity();
-            this->vel = Eigen::Vector3f::Zero();
+            this->pos(0) = msg->pose.pose.position.x;
+            this->pos(1) = msg->pose.pose.position.y;
+            this->pos(2) = atan2(2*(msg->pose.pose.orientation.w*msg->pose.pose.orientation.z + msg->pose.pose.orientation.x*msg->pose.pose.orientation.y), \
+                                 1 - 2*(msg->pose.pose.orientation.y*msg->pose.pose.orientation.y + msg->pose.pose.orientation.z*msg->pose.pose.orientation.z));
+
+            const geometry_msgs::Quaternion& q = msg->pose.pose.orientation;
+            Eigen::Quaternionf quat(q.w, q.x, q.y, q.z);
+            this->R = quat.toRotationMatrix();
+
+            this->vel.x() = msg->twist.twist.linear.x;
+            this->vel.y() = msg->twist.twist.linear.y;
+            this->vel.z() = msg->twist.twist.linear.z;
 
             // Biases
-            this->bw = Eigen::Vector3f::Zero();
-            this->ba = Eigen::Vector3f::Zero();
+            this->bw = {static_cast<float>(Config.state.covariance_bias_gyroscope), 
+                        static_cast<float>(Config.state.covariance_bias_gyroscope), 
+                        static_cast<float>(Config.state.covariance_bias_gyroscope)};
+                        
+            this->ba = {static_cast<float>(Config.state.covariance_bias_acceleration), 
+                        static_cast<float>(Config.state.covariance_bias_acceleration), 
+                        static_cast<float>(Config.state.covariance_bias_acceleration)};
 
             // Noise
             this->nw = Eigen::Vector3f::Zero();

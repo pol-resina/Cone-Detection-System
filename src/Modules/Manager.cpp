@@ -56,7 +56,8 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   std::cout << "update" << std::endl;
 
     // Define t1 but don't use to localize repeated points
-    t1 = std::max(t2 - delta, last_time_updated);
+    // t1 = std::max(t2 - delta, last_time_updated);
+    t1 = last_time_updated;
     // Check if interval has enough field of view
     if (t2 - t1 < delta - 1e-6) return;
 
@@ -66,7 +67,7 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
     // Compensated pointcloud given a path
     Points compensated = compensator.compensate(t1, t2);
       std::cout << "comp 1" << std::endl;
-    Points ds_compensated = compensator.downsample(compensated);
+    // Points ds_compensated = compensator.downsample(compensated);
   std::cout << "comp    2" << std::endl;
     // cloud = compensator.downsample_PCL(compensated);     // a try of returning directly PCL
     // if (ds_compensated.size() < Config.MAX_POINTS2MATCH) break; // in limo, don't know if its necessary
@@ -78,7 +79,8 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   std::cout << "clear buffers" << std::endl;
 
   // pcl::fromROSMsg(*cloud_msg, *cloud);   // --> need change
-  for (const auto& point : ds_compensated) {
+  std::cout << "compensated size: " << compensated.size() << std::endl;
+  for (const auto& point : compensated) {
       pcl::PointXYZI pcl_point;
       pcl_point.x = point.x;
       pcl_point.y = point.y;
@@ -87,7 +89,11 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
 
       cloud->points.push_back(pcl_point);
   }
+  std::cout << "cloud size: " << cloud->points.size() << std::endl;
   std::cout << "to PCL" << std::endl;
+  sensor_msgs::PointCloud2 preF2Fcloud;
+  pcl::toROSMsg(*cloud,preF2Fcloud);
+  publishCompensatedVelodyne(preF2Fcloud);
 
   cloud->width = cloud->points.size();
   cloud->height = 1; // Unorganized point cloud
@@ -96,6 +102,7 @@ void Manager::velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud_m
   pcl::PointCloud<pcl::PointXYZI>::Ptr no_ground(new pcl::PointCloud<pcl::PointXYZI>);
   sensor_msgs::PointCloud2 msg;
   ransac.removeGround(cloud, msg, no_ground, pubPreRANSAC);
+  std::cout << "no_ground size: " << no_ground->points.size() << std::endl;
 
   // // save time ransac
   // if (!clear_csv) {
@@ -216,7 +223,7 @@ void Manager::IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg){
   accumulator->receive_imu(imu_msg);
 }
 
-void Manager::stateCallback(const geometry_msgs::PoseStamped::ConstPtr& state_msg){
+void Manager::stateCallback(const nav_msgs::Odometry::ConstPtr& state_msg){
   accumulator->receive_state(state_msg);
 }
 

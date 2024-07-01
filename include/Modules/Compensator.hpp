@@ -25,7 +25,7 @@ class Compensator {
       States upsample(const States&, const IMUs&);
 
       Points voxelgrid_downsample(const Points&);
-      pcl::PointCloud<full_info::Point> voxelgrid_downsample_PCL(const Points&);
+      // pcl::PointCloud<full_info::Point> voxelgrid_downsample_PCL(const Points&);
       // Points onion_downsample(const Points&);
 
   public:
@@ -37,7 +37,7 @@ class Compensator {
     
     States path(double t1, double t2);
     Points downsample(const Points&);
-    pcl::PointCloud<full_info::Point> downsample_PCL(const Points&);
+    // pcl::PointCloud<full_info::Point> downsample_PCL(const Points&);
 
 };
 

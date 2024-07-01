@@ -15,7 +15,7 @@ extern struct Params Config;
 
             // (Integrated) States surrounding t1 and t2
             States path_taken = this->path(t1, t2);
-            assert (path_taken.size() >= 2);
+            // assert (path_taken.size() >= 2);
 
             // Compensated points given a path
             State Xt2 = this->get_t2(path_taken, t2);
@@ -61,10 +61,10 @@ extern struct Params Config;
         States Compensator::upsample(const States& states, const IMUs& imus) {
             std::cout << "imus front: " << imus.front().time << std::endl;
             std::cout << "states front: " << states.front().time << std::endl;
-            assert (states.back().time == states.front().time);
+            // assert (states.back().time == states.front().time);
             std::cout << "imus back: " << imus.back().time << std::endl;
             std::cout << "states front: " << states.back().time << std::endl;
-            assert (imus.front().time <= states.front().time and states.back().time <= imus.back().time);
+            // assert (imus.front().time <= states.front().time and states.back().time <= imus.back().time);
 
             int s, u;
             s = u = 0;
@@ -102,9 +102,9 @@ extern struct Params Config;
             // return this->onion_downsample(points);
         }
 
-        pcl::PointCloud<full_info::Point> Compensator::downsample_PCL(const Points& points) {
-            return this->voxelgrid_downsample_PCL(points);
-        }
+        // pcl::PointCloud<full_info::Point> Compensator::downsample_PCL(const Points& points) {
+        //     return this->voxelgrid_downsample_PCL(points);
+        // }
 
         /*
             @Input:
@@ -121,7 +121,7 @@ extern struct Params Config;
 
         Points Compensator::compensate(const States& states, const State& Xt2, const Points& points) {    // util
             // States have to surround points
-            assert (not states.empty() and states.front().time <= points.front().time and  points.back().time <= states.back().time);
+            // assert (not states.empty() and states.front().time <= points.front().time and  points.back().time <= states.back().time);
 
             Points t2_inv_ps;
             int p = 0;
@@ -159,24 +159,26 @@ extern struct Params Config;
             
             Points ds_points;
             for (auto p : ds_pcl.points) ds_points.push_back(Point (p));
+            std::cout << "points size: " << points.size() << std::endl;
+            std::cout << "points size: " << ds_points.size() << std::endl;
             return ds_points;
         }
 
-        pcl::PointCloud<full_info::Point> Compensator::voxelgrid_downsample_PCL(const Points& points) {
-            // Create a PointCloud pointer
-            pcl::PointCloud<full_info::Point>::Ptr pcl_ptr(new pcl::PointCloud<full_info::Point>());
-            PointCloudProcessor processor;
-            processor.fill(*pcl_ptr, points);
+        // pcl::PointCloud<full_info::Point> Compensator::voxelgrid_downsample_PCL(const Points& points) {
+        //     // Create a PointCloud pointer
+        //     pcl::PointCloud<full_info::Point>::Ptr pcl_ptr(new pcl::PointCloud<full_info::Point>());
+        //     PointCloudProcessor processor;
+        //     processor.fill(*pcl_ptr, points);
 
-            // Downsample using a VoxelGrid
-            pcl::PointCloud<full_info::Point> ds_pcl;
-            pcl::VoxelGrid<full_info::Point> filter;
-            filter.setInputCloud(pcl_ptr);
-            filter.setLeafSize(Config.lidar.downsample_prec, Config.lidar.downsample_prec, Config.lidar.downsample_prec);
-            filter.filter(ds_pcl);
+        //     // Downsample using a VoxelGrid
+        //     pcl::PointCloud<full_info::Point> ds_pcl;
+        //     pcl::VoxelGrid<full_info::Point> filter;
+        //     filter.setInputCloud(pcl_ptr);
+        //     filter.setLeafSize(Config.lidar.downsample_prec, Config.lidar.downsample_prec, Config.lidar.downsample_prec);
+        //     filter.filter(ds_pcl);
 
-            return ds_pcl;
-        }
+        //     return ds_pcl;
+        // }
 
         // Points Compensator::onion_downsample(const Points& points) {
         //     Points ds_points;

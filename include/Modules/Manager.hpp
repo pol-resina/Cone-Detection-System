@@ -64,7 +64,7 @@ class Manager {
     // Callbacks
     void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& cloud);
     void IMUCallback(const sensor_msgs::Imu::ConstPtr& imu_msg);
-    void stateCallback(const geometry_msgs::PoseStamped::ConstPtr& state_msg);
+    void stateCallback(const nav_msgs::Odometry::ConstPtr& state_msg);
     void limoveloCallback(const nav_msgs::Odometry::ConstPtr& odom_msg, const sensor_msgs::PointCloud2::ConstPtr& pcl_msg);
 };
 
